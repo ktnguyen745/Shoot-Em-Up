@@ -99,13 +99,35 @@ public class GameScreen implements Screen {
         // Laser
         renderBullet(delta);
 
+        detectCollision();
+
         batch.end();
+    }
+
+    private void detectCollision(){
+        ListIterator<Bullet> iterator = playerBullet.listIterator();
+        while(iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            if(enemyShip.intersects(bullet.getBoundingBox())){
+                enemyShip.hit(bullet);
+                iterator.remove(); // removes last item
+            }
+        }
+
+        iterator = enemyBullet.listIterator();
+        while(iterator.hasNext()) {
+            Bullet bullet = iterator.next();
+            if(playerShip.intersects(bullet.getBoundingBox())){
+                iterator.remove(); // removes last item
+            }
+        }
     }
 
     private void renderBullet(float delta){
         if(playerShip.canFireBullet()){
             Bullet[] pBullet = playerShip.shootBullet();
             for (Bullet bullet : pBullet){
+                playerShip.hit(bullet);
                 playerBullet.add(bullet);
             }
         }

@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Ship {
     // Ship characteristics
@@ -12,6 +13,8 @@ public abstract class Ship {
     // Position
     float xPosition, yPosition;
     float width, height;
+
+    Rectangle boundingBox;
 
     // Laser
     float bulletWidth, bulletHeight;
@@ -34,6 +37,9 @@ public abstract class Ship {
         this.yPosition = yCentre - height/2;
         this.width = width;
         this.height = height;
+
+        this.boundingBox = new Rectangle(xPosition,yPosition,width,height);
+
         this.bulletWidth = bulletWidth;
         this.bulletHeight = bulletHeight;
         this.bulletSpeed = bulletSpeed;
@@ -44,6 +50,7 @@ public abstract class Ship {
     }
 
     public void update(float deltaTime){
+        boundingBox.set(xPosition,yPosition,width,height);
         lastShotTime += deltaTime;
     }
 
@@ -56,6 +63,16 @@ public abstract class Ship {
     }
 
     public abstract Bullet[] shootBullet();
+
+    public boolean intersects(Rectangle otherRectangle){
+        return boundingBox.overlaps(otherRectangle);
+    }
+
+    public void hit(Bullet laser){
+        if (shield > 0){
+            shield--;
+        }
+    }
 
     // Draws ship and shield together
     public void draw(Batch batch){
