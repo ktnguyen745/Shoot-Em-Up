@@ -11,9 +11,6 @@ public abstract class Ship {
     int shield;
 
     // Position
-    float xPosition, yPosition;
-    float width, height;
-
     Rectangle boundingBox;
 
     // Laser
@@ -33,12 +30,7 @@ public abstract class Ship {
                 Texture shipTexture, Texture shieldTexture, Texture bulletTexture) {
         this.movementSpeed = movementSpeed;
         this.shield = shield;
-        this.xPosition = xCentre - width/2;
-        this.yPosition = yCentre - height/2;
-        this.width = width;
-        this.height = height;
-
-        this.boundingBox = new Rectangle(xPosition,yPosition,width,height);
+        this.boundingBox = new Rectangle( xCentre - width/2, yCentre - height/2,width,height);
 
         this.bulletWidth = bulletWidth;
         this.bulletHeight = bulletHeight;
@@ -50,7 +42,6 @@ public abstract class Ship {
     }
 
     public void update(float deltaTime){
-        boundingBox.set(xPosition,yPosition,width,height);
         lastShotTime += deltaTime;
     }
 
@@ -76,9 +67,9 @@ public abstract class Ship {
 
     // Draws ship and shield together
     public void draw(Batch batch){
-        batch.draw(shipTexture, xPosition, yPosition, width, height);
+        batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
         if (shield > 0) {
-            batch.draw(shieldTexture,xPosition,yPosition,width,height);
+            batch.draw(shieldTexture, boundingBox.x, boundingBox.y,boundingBox.width,boundingBox.height);
         }
     }
 }

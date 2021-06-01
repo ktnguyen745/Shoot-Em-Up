@@ -143,8 +143,8 @@ public class GameScreen implements Screen {
         while(iterator.hasNext()){
             Bullet bullet = iterator.next();
             bullet.draw(batch);
-            bullet.yPosition += bullet.movementSpeed * delta;
-            if(bullet.yPosition > WORLD_HEIGHT){
+            bullet.boundingBox.y += bullet.movementSpeed * delta;
+            if(bullet.boundingBox.y > WORLD_HEIGHT){
                 iterator.remove();
             }
         }
@@ -153,8 +153,8 @@ public class GameScreen implements Screen {
         while(iterator.hasNext()){
             Bullet bullet = iterator.next();
             bullet.draw(batch);
-            bullet.yPosition -= bullet.movementSpeed * delta;
-            if(bullet.yPosition + bullet.height < 0){
+            bullet.boundingBox.y -= bullet.movementSpeed * delta;
+            if(bullet.boundingBox.y + bullet.boundingBox.height < 0){
                 iterator.remove();
             }
         }

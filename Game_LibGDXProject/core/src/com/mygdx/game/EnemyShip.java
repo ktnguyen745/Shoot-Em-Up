@@ -10,7 +10,7 @@ public class EnemyShip extends Ship {
     @Override
     public Bullet[] shootBullet() {
         Bullet[] bullet = new Bullet[1];
-        bullet[0] = new Bullet(xPosition + width * 0.5f, yPosition - bulletHeight,
+        bullet[0] = new Bullet(boundingBox.x + boundingBox.width * 0.5f, boundingBox.y - bulletHeight,
                 bulletWidth, bulletHeight,
                 bulletSpeed, bulletTexture);
 

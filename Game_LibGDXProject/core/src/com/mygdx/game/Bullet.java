@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Bullet {
-    float xPosition, yPosition;
-    float width, height;
+    Rectangle boundingBox;
 
     float movementSpeed;
 
@@ -15,19 +14,12 @@ public class Bullet {
     public Bullet(float xCentre, float yBottom,
                   float width, float height,
                   float movementSpeed, Texture bulletTexture) {
-        this.xPosition = xCentre - width/2;
-        this.yPosition = yBottom;
-        this.width = width;
-        this.height = height;
+        this.boundingBox = new Rectangle(xCentre - width/2, yBottom, width,height);
         this.movementSpeed = movementSpeed;
         this.bulletTexture = bulletTexture;
     }
 
     public void draw(Batch batch){
-        batch.draw(bulletTexture, xPosition - width/2, yPosition, width, height);
-    }
-
-    public Rectangle getBoundingBox(){
-        return new Rectangle(xPosition,yPosition,width,height);
+        batch.draw(bulletTexture, boundingBox.x - boundingBox.width/2, boundingBox.y, boundingBox.width, boundingBox.height);
     }
 }
