@@ -45,11 +45,11 @@ public class GameScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-        this.background = new Texture("bg.png");
-        this.playerShipTexture =  new Texture("P-yellow-a.png");
+        this.background = new Texture("background.png");
+        this.playerShipTexture =  new Texture("player_ship.png");
         this.playerShieldTexture =  new Texture("shield1.png");
         this.playerLaserTexture =  new Texture("laserRed02.png");
-        this.enemyShipTexture =  new Texture("Enemy2b.png");
+        this.enemyShipTexture =  new Texture("enemy_a.png");
         this.enemyLaserTexture =  new Texture("laserBlue02.png");
         this.enemyShieldTexture = new Texture("shield2.png");
 
