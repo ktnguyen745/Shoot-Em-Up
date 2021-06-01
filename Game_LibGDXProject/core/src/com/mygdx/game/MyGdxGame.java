@@ -17,7 +17,9 @@ public class MyGdxGame extends Game {
 		menu = new MenuScreen(this);
 		game = new GameScreen(this);
 		menu.show();
-		setScreen(menu);
+
+		// TODO: Changed to game to make dev easier. Change back to menu for final rendition.
+		setScreen(game);
 	}
 
 	@Override
