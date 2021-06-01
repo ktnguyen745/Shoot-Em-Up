@@ -49,6 +49,10 @@ public class Button {
         }
     }
 
+    /**
+     * draw()
+     * Used to render the button.
+      */
     public void draw(SpriteBatch batch) {
         if (this.down == true) {
             batch.draw(this.textureDown, this.x, this.y, this.width, this.height);
