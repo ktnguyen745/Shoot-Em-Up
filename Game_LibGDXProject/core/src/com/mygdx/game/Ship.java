@@ -65,6 +65,10 @@ public abstract class Ship {
         }
     }
 
+    public void translate(float xChange, float yChange){
+        boundingBox.setPosition(boundingBox.x + xChange, boundingBox.y + yChange);
+    }
+
     // Draws ship and shield together
     public void draw(Batch batch){
         batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
