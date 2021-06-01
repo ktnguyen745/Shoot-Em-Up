@@ -79,14 +79,14 @@ public class GameScreen implements Screen {
         backgroundOffset ++;
 
         // If background offset gets bigger than the screen, reset to 0
-        if(backgroundOffset % WORLD_HEIGHT == 0){
+        if(backgroundOffset % (WORLD_HEIGHT * 2) == 0){
             backgroundOffset = 0;
         }
 
         // Initial background in view
-        batch.draw(background, 0 , -backgroundOffset, WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -(backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
         // Offscreen background that will come in view
-        batch.draw(background, 0 , -backgroundOffset + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -(backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
 
         // Enemy Ship
         enemyShip.draw(batch);
