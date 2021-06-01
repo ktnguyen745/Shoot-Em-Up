@@ -15,6 +15,7 @@ public class PlayerShip extends Ship {
     @Override
     public Bullet[] shootBullet() {
         Bullet[] bullet = new Bullet[1];
+
         bullet[0] = new Bullet(boundingBox.x + boundingBox.width * 0.5f, boundingBox.y + boundingBox.height,
                 bulletWidth, bulletHeight,
                 bulletSpeed, bulletTexture);
