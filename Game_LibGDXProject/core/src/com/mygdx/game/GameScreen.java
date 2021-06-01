@@ -108,7 +108,7 @@ public class GameScreen implements Screen {
         ListIterator<Bullet> iterator = playerBullet.listIterator();
         while(iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            if(enemyShip.intersects(bullet.getBoundingBox())){
+            if(enemyShip.intersects(bullet.boundingBox)){
                 enemyShip.hit(bullet);
                 iterator.remove(); // removes last item
             }
@@ -117,7 +117,7 @@ public class GameScreen implements Screen {
         iterator = enemyBullet.listIterator();
         while(iterator.hasNext()) {
             Bullet bullet = iterator.next();
-            if(playerShip.intersects(bullet.getBoundingBox())){
+            if(playerShip.intersects(bullet.boundingBox)){
                 iterator.remove(); // removes last item
             }
         }
