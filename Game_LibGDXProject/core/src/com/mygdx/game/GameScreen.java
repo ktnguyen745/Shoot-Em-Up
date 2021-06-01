@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class GameScreen implements Screen {
     MyGdxGame game;
@@ -29,12 +31,13 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Texture background;
 
-    private Texture playerShipTexture, playerShieldTexture, playerLaserTexture,
-            enemyLaserTexture, enemyShipTexture, enemyShieldTexture;
+    private Texture playerShipTexture, playerShieldTexture, playerBulletTexture,
+            enemyBulletTexture, enemyShipTexture, enemyShieldTexture;
 
     // Game Object
     private Ship playerShip;
     private Ship enemyShip;
+    private LinkedList<Bullet> playerBullet, enemyBullet;
 
     // Timing
     int backgroundOffset; // moves background
@@ -48,21 +51,26 @@ public class GameScreen implements Screen {
         this.background = new Texture("bg.png");
         this.playerShipTexture =  new Texture("P-yellow-a.png");
         this.playerShieldTexture =  new Texture("shield1.png");
-        this.playerLaserTexture =  new Texture("laserRed02.png");
         this.enemyShipTexture =  new Texture("Enemy2b.png");
-        this.enemyLaserTexture =  new Texture("laserBlue02.png");
         this.enemyShieldTexture = new Texture("shield2.png");
+
+        this.playerBulletTexture =  new Texture("laserRed02.png");
+        this.enemyBulletTexture =  new Texture("laserBlue02.png");
 
         this.backgroundOffset = 0;
 
-        this.playerShip = new Ship(2, 3, 10, 10,
+        this.playerShip = new PlayerShip(2, 3, 10, 10,
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
-                playerShipTexture, playerShieldTexture);
+                0.3f, 3, 45, 0.5f,
+                playerShipTexture, playerShieldTexture, playerBulletTexture);
 
-        this.enemyShip = new Ship(2, 1, 10, 10,
+        this.enemyShip = new EnemyShip(2, 1, 10, 10,
                 WORLD_WIDTH/2, WORLD_HEIGHT * 3/4,
-                enemyShipTexture, enemyShieldTexture);
+                0.4f, 4, 50, 0.8f,
+                enemyShipTexture, enemyShieldTexture, enemyBulletTexture);
 
+        this.playerBullet = new LinkedList<Bullet>();
+        this.enemyBullet = new LinkedList<Bullet>();
 
         this.batch = new SpriteBatch();
     }
@@ -74,6 +82,9 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         batch.begin();
+
+        playerShip.update(delta);
+        enemyShip.update(delta);
 
         // Scrolling component
         backgroundOffset ++;
@@ -93,6 +104,41 @@ public class GameScreen implements Screen {
 
         // Player Ship
         playerShip.draw(batch);
+
+        // Laser
+        if(playerShip.canFireBullet()){
+            Bullet[] pBullet = playerShip.shootBullet();
+            for (Bullet bullet : pBullet){
+                playerBullet.add(bullet);
+            }
+        }
+
+        if(enemyShip.canFireBullet()){
+            Bullet[] eBullet = enemyShip.shootBullet();
+            for (Bullet bullet : eBullet){
+                enemyBullet.add(bullet);
+            }
+        }
+
+        ListIterator<Bullet> iterator = playerBullet.listIterator();
+        while(iterator.hasNext()){
+            Bullet bullet = iterator.next();
+            bullet.draw(batch);
+            bullet.yPosition += bullet.movementSpeed * delta;
+            if(bullet.yPosition > WORLD_HEIGHT){
+                iterator.remove();
+            }
+        }
+
+        iterator = enemyBullet.listIterator();
+        while(iterator.hasNext()){
+            Bullet bullet = iterator.next();
+            bullet.draw(batch);
+            bullet.yPosition -= bullet.movementSpeed * delta;
+            if(bullet.yPosition + bullet.height < 0){
+                iterator.remove();
+            }
+        }
 
         batch.end();
     }

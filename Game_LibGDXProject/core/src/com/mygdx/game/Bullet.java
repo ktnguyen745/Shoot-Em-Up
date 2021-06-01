@@ -4,19 +4,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Bullet {
-    float movementSpeed;
-
     float xPosition, yPosition;
     float width, height;
 
+    float movementSpeed;
+
     Texture bulletTexture;
 
-    public Bullet(float movementSpeed, float xPosition, float yPosition, float width, float height, Texture bulletTexture) {
-        this.movementSpeed = movementSpeed;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+    public Bullet(float xCentre, float yBottom,
+                  float width, float height,
+                  float movementSpeed, Texture bulletTexture) {
+        this.xPosition = xCentre - width/2;
+        this.yPosition = yBottom;
         this.width = width;
         this.height = height;
+        this.movementSpeed = movementSpeed;
         this.bulletTexture = bulletTexture;
     }
 
