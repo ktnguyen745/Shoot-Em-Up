@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -48,10 +50,10 @@ public class GameScreen implements Screen {
         this.camera = new OrthographicCamera();
         this.viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-        this.background = new Texture("bg.png");
-        this.playerShipTexture =  new Texture("P-yellow-a.png");
+        this.background = new Texture("background.png");
+        this.playerShipTexture =  new Texture("player_ship.png");
         this.playerShieldTexture =  new Texture("shield1.png");
-        this.enemyShipTexture =  new Texture("Enemy2b.png");
+        this.enemyShipTexture =  new Texture("enemy_a.png");
         this.enemyShieldTexture = new Texture("shield2.png");
 
         this.playerBulletTexture =  new Texture("laserRed02.png");
@@ -86,18 +88,7 @@ public class GameScreen implements Screen {
         playerShip.update(delta);
         enemyShip.update(delta);
 
-        // Scrolling component
-        backgroundOffset ++;
-
-        // If background offset gets bigger than the screen, reset to 0
-        if(backgroundOffset % (WORLD_HEIGHT * 2) == 0){
-            backgroundOffset = 0;
-        }
-
-        // Initial background in view
-        batch.draw(background, 0 , -(backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
-        // Offscreen background that will come in view
-        batch.draw(background, 0 , -(backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+        renderBackground(delta);
 
         // Enemy Ship
         enemyShip.draw(batch);
@@ -106,6 +97,12 @@ public class GameScreen implements Screen {
         playerShip.draw(batch);
 
         // Laser
+        renderBullet(delta);
+
+        batch.end();
+    }
+
+    private void renderBullet(float delta){
         if(playerShip.canFireBullet()){
             Bullet[] pBullet = playerShip.shootBullet();
             for (Bullet bullet : pBullet){
@@ -139,8 +136,22 @@ public class GameScreen implements Screen {
                 iterator.remove();
             }
         }
+    }
 
-        batch.end();
+    private void renderBackground(float delta){
+        // Scrolling component
+        backgroundOffset ++;
+
+        // If background offset gets bigger than the screen, reset to 0
+        if(backgroundOffset % (WORLD_HEIGHT * 2) == 0){
+            backgroundOffset = 0;
+        }
+
+        // Initial background in view
+        batch.draw(background, 0 , -(backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
+        // Offscreen background that will come in view
+        batch.draw(background, 0 , -(backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+
     }
 
     @Override
