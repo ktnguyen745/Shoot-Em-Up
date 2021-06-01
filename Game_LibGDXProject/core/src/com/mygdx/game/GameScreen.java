@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -16,6 +17,10 @@ public class GameScreen implements Screen {
     // Game Setting
     private Difficulty difficulty;
 
+    // World parameters
+    private final int WORLD_WIDTH = 72; // 72
+    private final int WORLD_HEIGHT = 128; //128
+
     // Screen
     private Camera camera;
     private Viewport viewport;
@@ -24,12 +29,15 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Texture background;
 
+    private Texture playerShipTexture, playerShieldTexture, playerLaserTexture,
+            enemyLaserTexture, enemyShipTexture, enemyShieldTexture;
+
+    // Game Object
+    private Ship playerShip;
+    private Ship enemyShip;
+
     // Timing
     int backgroundOffset; // moves background
-
-    // World parameters
-    private final int WORLD_WIDTH = 72; // 72
-    private final int WORLD_HEIGHT = 128; //128
 
     public GameScreen(MyGdxGame game){
         this.game = game;
@@ -38,7 +46,23 @@ public class GameScreen implements Screen {
         this.viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
         this.background = new Texture("bg.png");
+        this.playerShipTexture =  new Texture("P-yellow-a.png");
+        this.playerShieldTexture =  new Texture("shield1.png");
+        this.playerLaserTexture =  new Texture("laserRed02.png");
+        this.enemyShipTexture =  new Texture("Enemy2b.png");
+        this.enemyLaserTexture =  new Texture("laserBlue02.png");
+        this.enemyShieldTexture = new Texture("shield2.png");
+
         this.backgroundOffset = 0;
+
+        this.playerShip = new Ship(2, 3, 10, 10,
+                WORLD_WIDTH/2, WORLD_HEIGHT/4,
+                playerShipTexture, playerShieldTexture);
+
+        this.enemyShip = new Ship(2, 1, 10, 10,
+                WORLD_WIDTH/2, WORLD_HEIGHT * 3/4,
+                enemyShipTexture, enemyShieldTexture);
+
 
         this.batch = new SpriteBatch();
     }
@@ -63,6 +87,12 @@ public class GameScreen implements Screen {
         batch.draw(background, 0 , -backgroundOffset, WORLD_WIDTH, WORLD_HEIGHT);
         // Offscreen background that will come in view
         batch.draw(background, 0 , -backgroundOffset + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+
+        // Enemy Ship
+        enemyShip.draw(batch);
+
+        // Player Ship
+        playerShip.draw(batch);
 
         batch.end();
     }
