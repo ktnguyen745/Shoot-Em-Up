@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -18,7 +19,6 @@ public class GameScreen implements Screen {
 
     // Game difficulty
     public enum Difficulty{EASY, MEDIUM, HARD};
-
     private Difficulty difficulty;
 
     // Constants
@@ -32,15 +32,11 @@ public class GameScreen implements Screen {
 
     // Graphics
     private SpriteBatch batch;
-
-    private Texture background, playerShipTexture,
-            playerShieldTexture, playerBulletTexture,
-            enemyBulletTexture, enemyShipTexture,
-            enemyShieldTexture;
+    private Texture background;
 
     // Object (ships and bullets)
-    private Ship playerShip, enemyShip;
-    private LinkedList<Bullet> playerBullet, enemyBullet;
+    private Ship playerShip;
+    private ArrayList<Ship> enemyShips;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -53,14 +49,7 @@ public class GameScreen implements Screen {
         this.viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
         // Setup textures and batch
-        this.background = new Texture("background.png");
-        this.playerShipTexture =  new Texture("player_ship.png");
-        this.playerShieldTexture =  new Texture("shield1.png");
-        this.enemyShipTexture =  new Texture("enemy_a.png");
-        this.enemyShieldTexture = new Texture("shield2.png");
-        this.playerBulletTexture =  new Texture("laserRed02.png");
-        this.enemyBulletTexture =  new Texture("laserBlue02.png");
-
+        this.background = new Texture(Gdx.files.internal("background.png"));
         this.batch = new SpriteBatch();
 
         // Start background offset at the bottom of the background image
@@ -69,17 +58,19 @@ public class GameScreen implements Screen {
         // Setup ships
         this.playerShip = new PlayerShip(48, 3, 10, 10,
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
-                0.3f, 3, 45, 0.5f,
-                playerShipTexture, playerShieldTexture, playerBulletTexture);
+                0.5f, "player_ship.png", "shield1.png");
 
-        this.enemyShip = new EnemyShip(2, 1, 10, 10,
-                WORLD_WIDTH/2, WORLD_HEIGHT * 3/4,
-                0.4f, 4, 50, 0.8f,
-                enemyShipTexture, enemyShieldTexture, enemyBulletTexture);
+        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
+                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
+                0.8f, "enemy_a.png", "shield2.png");
 
-        // Setup bullets
-        this.playerBullet = new LinkedList<Bullet>();
-        this.enemyBullet = new LinkedList<Bullet>();
+        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 3, 15, 11,
+                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
+                1.5f, "enemy_b.png", "shield2.png");
+
+        enemyShips = new ArrayList<Ship>();
+        enemyShips.add(enemyShip);
+        enemyShips.add(enemyTripleshot);
     }
 
     public void create(Difficulty difficulty){
@@ -95,20 +86,24 @@ public class GameScreen implements Screen {
 
         // Update ships
         playerShip.update(delta);
-        enemyShip.update(delta);
+        for(Ship enemy : enemyShips){
+            enemy.update(delta);
+        }
 
-        // Generate ships
-        enemyShip.draw(batch);
+        // Check for collisions
+        for(Ship enemy : enemyShips){
+            playerShip.collisionCheck(enemy);
+            enemy.collisionCheck(playerShip);
+        }
+
+        // Render ships
         playerShip.draw(batch);
-
-        // Generate bullets
-        renderBullet(delta);
+        for(Ship enemy : enemyShips){
+            enemy.draw(batch);
+        }
 
         // Check for user input
         detectInput(delta);
-
-        // Check if there's been a collision
-        detectCollision();
 
         batch.end();
     }
@@ -161,61 +156,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void detectCollision(){
-        ListIterator<Bullet> iterator = playerBullet.listIterator();
-        while(iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            if(enemyShip.intersects(bullet.boundingBox)){
-                enemyShip.hit(bullet);
-                iterator.remove(); // removes last item
-            }
-        }
 
-        iterator = enemyBullet.listIterator();
-        while(iterator.hasNext()) {
-            Bullet bullet = iterator.next();
-            if(playerShip.intersects(bullet.boundingBox)){
-                iterator.remove(); // removes last item
-            }
-        }
-    }
-
-    private void renderBullet(float delta){
-        if(playerShip.canFireBullet()){
-            Bullet[] pBullet = playerShip.shootBullet();
-            for (Bullet bullet : pBullet){
-                playerShip.hit(bullet);
-                playerBullet.add(bullet);
-            }
-        }
-
-        if(enemyShip.canFireBullet()){
-            Bullet[] eBullet = enemyShip.shootBullet();
-            for (Bullet bullet : eBullet){
-                enemyBullet.add(bullet);
-            }
-        }
-
-        ListIterator<Bullet> iterator = playerBullet.listIterator();
-        while(iterator.hasNext()){
-            Bullet bullet = iterator.next();
-            bullet.draw(batch);
-            bullet.boundingBox.y += bullet.movementSpeed * delta;
-            if(bullet.boundingBox.y > WORLD_HEIGHT){
-                iterator.remove();
-            }
-        }
-
-        iterator = enemyBullet.listIterator();
-        while(iterator.hasNext()){
-            Bullet bullet = iterator.next();
-            bullet.draw(batch);
-            bullet.boundingBox.y -= bullet.movementSpeed * delta;
-            if(bullet.boundingBox.y + bullet.boundingBox.height < 0){
-                iterator.remove();
-            }
-        }
-    }
 
     private void renderBackground(float delta){
         // Scroll up on the background image
