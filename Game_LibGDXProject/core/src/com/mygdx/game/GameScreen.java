@@ -32,14 +32,10 @@ public class GameScreen implements Screen {
 
     // Graphics
     private SpriteBatch batch;
-
-    private Texture background, playerShipTexture,
-            playerShieldTexture, playerBulletTexture,
-            enemyBulletTexture, enemyShipTexture,
-            enemyShieldTexture;
+    private Texture background;
 
     // Object (ships and bullets)
-    private Ship playerShip, enemyShip;
+    private Ship playerShip;
     private ArrayList<Ship> enemyShips;
 
     // Game timer
@@ -54,13 +50,6 @@ public class GameScreen implements Screen {
 
         // Setup textures and batch
         this.background = new Texture(Gdx.files.internal("background.png"));
-        this.playerShipTexture =  new Texture(Gdx.files.internal("player_ship.png"));
-        this.playerShieldTexture =  new Texture(Gdx.files.internal("shield1.png"));
-        this.enemyShipTexture =  new Texture(Gdx.files.internal("enemy_a.png"));
-        this.enemyShieldTexture = new Texture(Gdx.files.internal("shield2.png"));
-        this.playerBulletTexture =  new Texture(Gdx.files.internal("bullet_red.png"));
-        this.enemyBulletTexture =  new Texture(Gdx.files.internal("bullet_blue.png"));
-
         this.batch = new SpriteBatch();
 
         // Start background offset at the bottom of the background image
@@ -69,14 +58,19 @@ public class GameScreen implements Screen {
         // Setup ships
         this.playerShip = new PlayerShip(48, 3, 10, 10,
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
-                0.5f, playerShipTexture, playerShieldTexture);
+                0.5f, "player_ship.png", "shield1.png");
 
-        this.enemyShip = new EnemyShip(2, 1, 10, 10,
-                WORLD_WIDTH/2, WORLD_HEIGHT * 3/4,
-                0.8f, enemyShipTexture, enemyShieldTexture);
+        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
+                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
+                0.8f, "enemy_a.png", "shield2.png");
+
+        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 3, 15, 11,
+                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
+                1.5f, "enemy_b.png", "shield2.png");
 
         enemyShips = new ArrayList<Ship>();
-        enemyShips.add(this.enemyShip);
+        enemyShips.add(enemyShip);
+        enemyShips.add(enemyTripleshot);
     }
 
     public void create(Difficulty difficulty){

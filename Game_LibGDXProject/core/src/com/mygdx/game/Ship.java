@@ -20,18 +20,18 @@ public abstract class Ship {
     float lastShotTime = 0;
 
     // Graphics
-    Texture shipTexture, shieldTexture, bulletTexture;
+    Texture shipTexture, shieldTexture;
 
     public Ship(float movementSpeed, int shield, float width, float height,
                 float xCentre, float yCentre, float reloadTime,
-                Texture shipTexture, Texture shieldTexture) {
+                String shipTexture, String shieldTexture) {
         this.movementSpeed = movementSpeed;
         this.shield = shield;
         this.boundingBox = new Rectangle( xCentre - width/2, yCentre - height/2,width,height);
 
         this.reloadTime = reloadTime;
-        this.shipTexture = shipTexture;
-        this.shieldTexture = shieldTexture;
+        this.shipTexture = new Texture(shipTexture);
+        this.shieldTexture = new Texture(shieldTexture);
 
         this.bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
     }

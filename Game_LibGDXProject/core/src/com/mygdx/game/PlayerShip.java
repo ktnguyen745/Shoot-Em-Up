@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class PlayerShip extends Ship {
     public PlayerShip(float movementSpeed, int shield, float width, float height,
                       float xCentre, float yCentre, float reloadTime,
-                      Texture shipTexture, Texture shieldTexture) {
+                      String shipTexture, String shieldTexture) {
         super(movementSpeed, shield, width, height, xCentre, yCentre, reloadTime, shipTexture, shieldTexture);
         bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
     }
