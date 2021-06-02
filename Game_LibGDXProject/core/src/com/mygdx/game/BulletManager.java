@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class BulletManager {
@@ -12,18 +13,19 @@ public class BulletManager {
 
     private Texture bulletTexture;
     private float bulletLifespan;
+    private float width;
+    private float height;
 
     Type[] bullets = new Type[max_bullets];
     Vector2[] position = new Vector2[max_bullets];
     Vector2[] velocity = new Vector2[max_bullets];
     float[] lifespan = new float[max_bullets];
 
-    public BulletManager(String bulletTexture, float bulletLifespan){
+    public BulletManager(String bulletTexture, float bulletLifespan, float width, float height){
         this.bulletTexture = new Texture(Gdx.files.internal(bulletTexture));
         this.bulletLifespan = bulletLifespan;
-    }
-
-    public void init(){
+        this.width = width;
+        this.height = height;
         for(int i = 0; i < max_bullets; i++){
             bullets[i] = Type.NONE;
             position[i] = new Vector2();
@@ -73,7 +75,20 @@ public class BulletManager {
     public void render(SpriteBatch batch){
         for(int i = 0; i < max_bullets; i++){
             if(bullets[i] != Type.NONE){
-                batch.draw(bulletTexture, position[i].x, position[i].y);
+                batch.draw(bulletTexture, position[i].x, position[i].y, width, height);
+            }
+        }
+    }
+
+    public void collisionCheck(Ship ship){
+        Rectangle hitbox = new Rectangle();
+        hitbox.setHeight(height);
+        hitbox.setWidth(width);
+        for(int i = 0; i < max_bullets; i++){
+            hitbox.setX(position[i].x);
+            hitbox.setY(position[i].y);
+            if(ship.intersects(hitbox)){
+                ship.hit();
             }
         }
     }

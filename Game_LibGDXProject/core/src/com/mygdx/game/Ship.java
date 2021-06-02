@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -14,52 +15,51 @@ public abstract class Ship {
     Rectangle boundingBox;
 
     // Laser
-    float bulletWidth, bulletHeight;
-    float bulletSpeed;
+    protected BulletManager bullets;
     float reloadTime;
     float lastShotTime = 0;
 
     // Graphics
     Texture shipTexture, shieldTexture, bulletTexture;
 
-    public Ship(float movementSpeed, int shield,
-                float width, float height,
-                float xCentre, float yCentre,
-                float bulletWidth, float bulletHeight, float bulletSpeed,
-                float reloadTime,
-                Texture shipTexture, Texture shieldTexture, Texture bulletTexture) {
+    public Ship(float movementSpeed, int shield, float width, float height,
+                float xCentre, float yCentre, float reloadTime,
+                Texture shipTexture, Texture shieldTexture) {
         this.movementSpeed = movementSpeed;
         this.shield = shield;
         this.boundingBox = new Rectangle( xCentre - width/2, yCentre - height/2,width,height);
 
-        this.bulletWidth = bulletWidth;
-        this.bulletHeight = bulletHeight;
-        this.bulletSpeed = bulletSpeed;
         this.reloadTime = reloadTime;
         this.shipTexture = shipTexture;
         this.shieldTexture = shieldTexture;
-        this.bulletTexture = bulletTexture;
+
+        this.bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
     }
 
     public void update(float deltaTime){
         lastShotTime += deltaTime;
+
+        if(canFireBullet() == true) shoot();
+
+        bullets.update(deltaTime);
     }
 
     public boolean canFireBullet(){
         if(lastShotTime - reloadTime >= 0){
+            lastShotTime = 0;
             return true;
         }
 
         return false;
     }
 
-    public abstract Bullet[] shootBullet();
+    public abstract void shoot();
 
     public boolean intersects(Rectangle otherRectangle){
         return boundingBox.overlaps(otherRectangle);
     }
 
-    public void hit(Bullet laser){
+    public void hit(){
         if (shield > 0){
             shield--;
         }
@@ -69,11 +69,16 @@ public abstract class Ship {
         boundingBox.setPosition(boundingBox.x + xChange, boundingBox.y + yChange);
     }
 
+    public void collisionCheck(Ship ship){
+        bullets.collisionCheck(ship);
+    }
+
     // Draws ship and shield together
-    public void draw(Batch batch){
+    public void draw(SpriteBatch batch){
         batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
         if (shield > 0) {
             batch.draw(shieldTexture, boundingBox.x, boundingBox.y,boundingBox.width,boundingBox.height);
         }
+        bullets.render(batch);
     }
 }
