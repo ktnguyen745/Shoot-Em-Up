@@ -64,7 +64,7 @@ public class GameScreen implements Screen {
                 WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
                 0.8f, "enemy_a.png", "shield2.png");
 
-        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 3, 15, 11,
+        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
                 (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
                 1.5f, "enemy_b.png", "shield2.png");
 

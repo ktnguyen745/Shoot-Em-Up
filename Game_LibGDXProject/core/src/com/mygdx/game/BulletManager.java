@@ -85,10 +85,13 @@ public class BulletManager {
         hitbox.setHeight(height);
         hitbox.setWidth(width);
         for(int i = 0; i < max_bullets; i++){
-            hitbox.setX(position[i].x);
-            hitbox.setY(position[i].y);
-            if(ship.intersects(hitbox)){
-                ship.hit();
+            if(bullets[i] != Type.NONE){
+                hitbox.setX(position[i].x);
+                hitbox.setY(position[i].y);
+                if(ship.intersects(hitbox)){
+                    ship.hit();
+                    bullets[i] = Type.NONE;
+                }
             }
         }
     }
