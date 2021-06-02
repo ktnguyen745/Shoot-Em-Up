@@ -1,1 +1,2 @@
 player_ship - 26 x 22
+enemy_a - 26 x 22

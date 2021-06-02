@@ -58,8 +58,8 @@ public class GameScreen implements Screen {
         this.playerShieldTexture =  new Texture("shield1.png");
         this.enemyShipTexture =  new Texture("enemy_a.png");
         this.enemyShieldTexture = new Texture("shield2.png");
-        this.playerBulletTexture =  new Texture("laserRed02.png");
-        this.enemyBulletTexture =  new Texture("laserBlue02.png");
+        this.playerBulletTexture =  new Texture("bullet_red.png");
+        this.enemyBulletTexture =  new Texture("bullet_blue.png");
 
         this.batch = new SpriteBatch();
 
