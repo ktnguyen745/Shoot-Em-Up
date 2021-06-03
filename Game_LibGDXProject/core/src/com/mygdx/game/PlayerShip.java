@@ -12,7 +12,7 @@ public class PlayerShip extends Ship {
 
     @Override
     public void shoot() {
-        float posX = boundingBox.x + boundingBox.width / 2;
+        float posX = (boundingBox.x + boundingBox.width * 0.5f) - 1;
         float posY = boundingBox.y + boundingBox.height;
         float velX = 0;
         float velY = 45;
