@@ -41,6 +41,9 @@ public class GameScreen implements Screen {
     // Game timer
     int backgroundOffset; // Used to scroll along background
 
+    // Sound Manager
+    SoundManager soundManager = new SoundManager();
+
     public GameScreen(MyGdxGame game){
         this.game = game;
 
@@ -206,5 +209,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        soundManager.dispose();
     }
 }
