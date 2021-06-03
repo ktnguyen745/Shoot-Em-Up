@@ -18,7 +18,7 @@ public class GameScreen implements Screen {
     MyGdxGame game;
 
     // Game difficulty
-    public enum Difficulty{EASY, MEDIUM, HARD};
+    public enum Difficulty{EASY, MEDIUM, HARD}
     private Difficulty difficulty;
 
     // Constants
@@ -57,15 +57,15 @@ public class GameScreen implements Screen {
 
         // Setup ships
         this.playerShip = new PlayerShip(48, 3, 10, 10,
-                WORLD_WIDTH/2, WORLD_HEIGHT/4,
+                (float) WORLD_WIDTH/2, (float)WORLD_HEIGHT/4,
                 0.5f, "player_ship.png", "shield1.png");
 
-        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
-                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
+        EnemyShip enemyShip = new EnemyShip(48, 1, 10, 10,
+                MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT -5,
                 0.8f, "enemy_a.png", "shield2.png");
 
         EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
-                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
+                (float) (WORLD_WIDTH / 4) * 3, (float) WORLD_HEIGHT * 3/4,
                 1.5f, "enemy_b.png", "shield2.png");
 
         enemyShips = new ArrayList<EnemyShip>();
@@ -141,7 +141,7 @@ public class GameScreen implements Screen {
         leftLimit = -playerShip.boundingBox.x;
         downLimit = -playerShip.boundingBox.y;
         rightLimit = WORLD_WIDTH - playerShip.boundingBox.x - playerShip.boundingBox.width;
-        upLimit = WORLD_HEIGHT / 2 - playerShip.boundingBox.y - playerShip.boundingBox.height;
+        upLimit = (float) WORLD_HEIGHT / 2 - playerShip.boundingBox.y - playerShip.boundingBox.height;
 
         if (Gdx.input.isTouched()){
             // Determine what part of the screen was touched and get the (pixel) coordinates
@@ -196,8 +196,8 @@ public class GameScreen implements Screen {
         // Generate two backgrounds images. The first one starts in view and scrolls offscreen.
         // The second image is generated offscreen but scrolls into view.
         // Background offset is divided by two to slow scrolling speed.
-        batch.draw(background, 0 , -(backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
-        batch.draw(background, 0 , -(backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -((float) backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -((float) backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
 
     }
 
