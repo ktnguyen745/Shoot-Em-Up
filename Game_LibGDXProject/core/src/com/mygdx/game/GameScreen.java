@@ -41,8 +41,9 @@ public class GameScreen implements Screen {
     // Game timer
     int backgroundOffset; // Used to scroll along background
 
-    public GameScreen(MyGdxGame game){
+    public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
+        this.difficulty = difficulty;
 
         // Setup screen settings
         this.camera = new OrthographicCamera();
@@ -60,22 +61,25 @@ public class GameScreen implements Screen {
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
                 0.5f, "player_ship.png", "shield1.png");
 
-        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
-                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
-                0.8f, "enemy_a.png", "shield2.png");
+//        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
+//                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
+//                0.8f, "enemy_a.png", "shield2.png");
+//
+//        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
+//                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
+//                1.5f, "enemy_b.png", "shield2.png");
 
-        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
-                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
-                1.5f, "enemy_b.png", "shield2.png");
+        BossShip boss = new BossShip(20, 30, 38, 30,
+                WORLD_WIDTH/2, WORLD_HEIGHT * 3/4,
+                1.5f, "boss_ship.png", "shield2.png", difficulty);
 
         enemyShips = new ArrayList<Ship>();
-        enemyShips.add(enemyShip);
-        enemyShips.add(enemyTripleshot);
+//        enemyShips.add(enemyShip);
+//        enemyShips.add(enemyTripleshot);
+        enemyShips.add(boss);
     }
 
-    public void create(Difficulty difficulty){
-        this.difficulty = difficulty;
-    }
+    public void create(){ }
 
     @Override
     public void render(float delta) {
