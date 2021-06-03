@@ -16,13 +16,19 @@ public class BossShip extends EnemyShip{
         this.difficulty = difficulty;
         switch(difficulty){
             case EASY:
-                shotPatterns = 3;
+                this.shotPatterns = 3;
+                this.reloadTime = 2f;
+                this.shield = 30;
                 break;
             case MEDIUM:
-                shotPatterns = 4;
+                this.shotPatterns = 4;
+                this.reloadTime = 1.5f;
+                this.shield = 40;
                 break;
             case HARD:
-                shotPatterns = 5;
+                this.shotPatterns = 5;
+                this.reloadTime = 1f;
+                this.shield = 50;
                 break;
         }
     }
