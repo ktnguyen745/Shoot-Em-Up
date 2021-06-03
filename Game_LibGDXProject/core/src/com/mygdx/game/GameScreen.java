@@ -41,9 +41,6 @@ public class GameScreen implements Screen {
     // Game timer
     int backgroundOffset; // Used to scroll along background
 
-    // Sound Manager
-    SoundManager soundManager;
-
     public GameScreen(MyGdxGame game){
         this.game = game;
 
@@ -74,6 +71,8 @@ public class GameScreen implements Screen {
         enemyShips = new ArrayList<Ship>();
         enemyShips.add(enemyShip);
         enemyShips.add(enemyTripleshot);
+
+        SoundManager.PlayBackgroundMusic();
     }
 
     public void create(Difficulty difficulty){
@@ -209,6 +208,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        soundManager.dispose();
+        SoundManager.Dispose();
     }
 }

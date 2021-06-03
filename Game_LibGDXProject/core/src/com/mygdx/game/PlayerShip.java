@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
-
 public class PlayerShip extends Ship {
     public PlayerShip(float movementSpeed, int shield, float width, float height,
                       float xCentre, float yCentre, float reloadTime,
@@ -19,6 +17,6 @@ public class PlayerShip extends Ship {
         float velY = 45;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
 
-        SoundManager.player_shoot.play();
+        SoundManager.PLAYER_SHOOT.play();
     }
 }
