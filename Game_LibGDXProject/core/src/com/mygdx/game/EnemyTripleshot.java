@@ -12,7 +12,6 @@ public class EnemyTripleshot extends Ship{
         bullets = new BulletManager("bullet_green.png", 5.0f, 3f, 3f);
     }
 
-    SoundManager soundManager = new SoundManager();
 
     @Override
     public void shoot() {
@@ -28,6 +27,6 @@ public class EnemyTripleshot extends Ship{
         velY = -37;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
 
-        soundManager.enemy_shoot2.play();
+        SoundManager.enemy_shoot2.play();
     }
 }

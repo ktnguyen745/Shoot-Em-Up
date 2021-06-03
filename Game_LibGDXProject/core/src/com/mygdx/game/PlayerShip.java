@@ -10,7 +10,6 @@ public class PlayerShip extends Ship {
         bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
     }
 
-    SoundManager soundManager = new SoundManager();
 
     @Override
     public void shoot() {
@@ -20,6 +19,6 @@ public class PlayerShip extends Ship {
         float velY = 45;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
 
-        soundManager.player_shoot.play();
+        SoundManager.player_shoot.play();
     }
 }

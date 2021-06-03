@@ -18,7 +18,7 @@ public class GameScreen implements Screen {
     MyGdxGame game;
 
     // Game difficulty
-    public enum Difficulty{EASY, MEDIUM, HARD};
+    public enum Difficulty{EASY, MEDIUM, HARD}
     private Difficulty difficulty;
 
     // Constants
@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
     int backgroundOffset; // Used to scroll along background
 
     // Sound Manager
-    SoundManager soundManager = new SoundManager();
+    SoundManager soundManager;
 
     public GameScreen(MyGdxGame game){
         this.game = game;
