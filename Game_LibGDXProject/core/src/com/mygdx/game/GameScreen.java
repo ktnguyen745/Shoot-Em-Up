@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
 
     // Object (ships and bullets)
     private Ship playerShip;
-    private ArrayList<Ship> enemyShips;
+    private ArrayList<EnemyShip> enemyShips;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
                 (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
                 1.5f, "enemy_b.png", "shield2.png");
 
-        enemyShips = new ArrayList<Ship>();
+        enemyShips = new ArrayList<EnemyShip>();
         enemyShips.add(enemyShip);
         enemyShips.add(enemyTripleshot);
     }
@@ -105,7 +105,33 @@ public class GameScreen implements Screen {
         // Check for user input
         detectInput(delta);
 
+        // Enemy movement
+        moveEnemies(delta);
+
         batch.end();
+    }
+
+    private void moveEnemies(float delta) {
+        float leftLimit, rightLimit, upLimit, downLimit;
+        // TODO: implement for multiple enemies
+        leftLimit = -enemyShips.get(0).boundingBox.x;
+        downLimit = (float) WORLD_HEIGHT / 2 - enemyShips.get(0).boundingBox.y;
+        rightLimit = WORLD_WIDTH - enemyShips.get(0).boundingBox.x - enemyShips.get(0).boundingBox.width;
+        upLimit = WORLD_HEIGHT - enemyShips.get(0).boundingBox.y - enemyShips.get(0).boundingBox.height;
+
+        float xMove = enemyShips.get(0).getDirectionVector().x * enemyShips.get(0).movementSpeed * delta;
+        float yMove = enemyShips.get(0).getDirectionVector().y * enemyShips.get(0).movementSpeed * delta;
+
+        // Makes sure ship doesn't move off screen
+        if (xMove > 0) xMove = Math.min(xMove, rightLimit);
+        else xMove = Math.max(xMove, leftLimit);
+
+        if (yMove > 0) yMove = Math.min(yMove, upLimit);
+        else yMove = Math.max(yMove, downLimit);
+
+        // Update player ship position
+        enemyShips.get(0).translate(xMove,yMove);
+
     }
 
     private  void detectInput(float delta){
