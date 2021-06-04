@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
         enemiesDestroyed = 0;
         switch (difficulty){
             case EASY:
-                totalEnemies = 1;
+                totalEnemies = 10;
                 maxEnemiesOnScreen = 3;
                 break;
             case MEDIUM:
@@ -194,6 +194,23 @@ public class GameScreen implements Screen {
 
         float xMove = enemyShip.getDirectionVector().x * enemyShip.movementSpeed * delta;
         float yMove = enemyShip.getDirectionVector().y * enemyShip.movementSpeed * delta;
+
+        // make sure the ship is moving towards correct direction when it reaches the boundary
+        if (enemyShip.boundingBox.x <= 0) {
+            xMove = enemyShip.getDirectionVectorRight().x * enemyShip.movementSpeed * delta;
+        }
+
+        if (enemyShip.boundingBox.x + enemyShip.boundingBox.width >= WORLD_WIDTH) {
+            xMove = enemyShip.getDirectionVectorLeft().x * enemyShip.movementSpeed * delta;
+        }
+
+        if (enemyShip.boundingBox.y + enemyShip.boundingBox.height >= WORLD_HEIGHT) {
+            yMove = enemyShip.getDirectionVectorDown().y * enemyShip.movementSpeed * delta;
+        }
+
+        if (enemyShip.boundingBox.y <= (float) WORLD_HEIGHT / 2) {
+            yMove = enemyShip.getDirectionVectorUp().y * enemyShip.movementSpeed * delta;
+        }
 
         // Makes sure ship doesn't move off screen
         if (xMove > 0) xMove = Math.min(xMove, rightLimit);
