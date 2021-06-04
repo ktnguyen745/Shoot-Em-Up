@@ -2,7 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class EnemyTripleshot extends Ship{
+public class EnemyTripleshot extends EnemyShip{
 
     public EnemyTripleshot(float movementSpeed, int shield, float width, float height,
                      float xCentre, float yCentre, float reloadTime,

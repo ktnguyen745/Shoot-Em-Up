@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
 
     // Object (ships and bullets)
     private Ship playerShip;
-    private ArrayList<Ship> enemyShips;
+    private ArrayList<EnemyShip> enemyShips;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -88,10 +88,21 @@ public class GameScreen implements Screen {
 
         // Setup ships
         this.playerShip = new PlayerShip(64, 3, 10, 10,
-                WORLD_WIDTH/2, WORLD_HEIGHT/4,
+                (float) WORLD_WIDTH/2, (float) WORLD_HEIGHT/4,
                 0.5f, "player_ship.png", "shield1.png");
 
-        enemyShips = new ArrayList<Ship>();
+        enemyShips = new ArrayList<EnemyShip>();
+        //EnemyShip enemyShip = new EnemyShip(48, 1, 10, 10,
+         //       MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT -5,
+         //       0.8f, "enemy_a.png", "shield2.png");
+
+        //EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
+        //        (float) (WORLD_WIDTH / 4) * 3, (float) WORLD_HEIGHT * 3/4,
+         //       1.5f, "enemy_b.png", "shield2.png");
+
+        //enemyShips = new ArrayList<EnemyShip>();
+        //enemyShips.add(enemyShip);
+        //enemyShips.add(enemyTripleshot);
     }
 
     public void create(){ }
@@ -169,7 +180,33 @@ public class GameScreen implements Screen {
         // Check for user input
         detectInput(delta);
 
+        // Enemy movement
+        moveEnemies(delta);
+
         batch.end();
+    }
+
+    private void moveEnemies(float delta) {
+        float leftLimit, rightLimit, upLimit, downLimit;
+        // TODO: implement for multiple enemies
+        leftLimit = -enemyShips.get(0).boundingBox.x;
+        downLimit = (float) WORLD_HEIGHT / 2 - enemyShips.get(0).boundingBox.y;
+        rightLimit = WORLD_WIDTH - enemyShips.get(0).boundingBox.x - enemyShips.get(0).boundingBox.width;
+        upLimit = WORLD_HEIGHT - enemyShips.get(0).boundingBox.y - enemyShips.get(0).boundingBox.height;
+
+        //float xMove = enemyShips.get(0).getDirectionVector().x * enemyShips.get(0).movementSpeed * delta;
+        //float yMove = enemyShips.get(0).getDirectionVector().y * enemyShips.get(0).movementSpeed * delta;
+
+        // Makes sure ship doesn't move off screen
+        //if (xMove > 0) xMove = Math.min(xMove, rightLimit);
+        //else xMove = Math.max(xMove, leftLimit);
+
+        //if (yMove > 0) yMove = Math.min(yMove, upLimit);
+        //else yMove = Math.max(yMove, downLimit);
+
+        // Update player ship position
+        //enemyShips.get(0).translate(xMove,yMove);
+
     }
 
     private void spawnEnemy(){
@@ -177,7 +214,7 @@ public class GameScreen implements Screen {
         if(random < 70){
             enemyShips.add(ShipBuilder.buildEnemy());
         } else {
-            enemyShips.add(ShipBuilder.buildTripleShot());
+            //enemyShips.add(ShipBuilder.buildTripleShot());
         }
     }
 
@@ -188,7 +225,7 @@ public class GameScreen implements Screen {
         leftLimit = -playerShip.boundingBox.x;
         downLimit = -playerShip.boundingBox.y;
         rightLimit = WORLD_WIDTH - playerShip.boundingBox.x - playerShip.boundingBox.width;
-        upLimit = WORLD_HEIGHT / 2 - playerShip.boundingBox.y - playerShip.boundingBox.height;
+        upLimit = (float) WORLD_HEIGHT / 2 - playerShip.boundingBox.y - playerShip.boundingBox.height;
 
         if (Gdx.input.isTouched()){
             // Determine what part of the screen was touched and get the (pixel) coordinates
@@ -229,6 +266,8 @@ public class GameScreen implements Screen {
         }
     }
 
+
+
     private void renderBackground(float delta){
         // Scroll up on the background image
         backgroundOffset ++;
@@ -241,8 +280,8 @@ public class GameScreen implements Screen {
         // Generate two backgrounds images. The first one starts in view and scrolls offscreen.
         // The second image is generated offscreen but scrolls into view.
         // Background offset is divided by two to slow scrolling speed.
-        batch.draw(background, 0 , -(backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
-        batch.draw(background, 0 , -(backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -((float) backgroundOffset/2), WORLD_WIDTH, WORLD_HEIGHT);
+        batch.draw(background, 0 , -((float) backgroundOffset/2) + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
 
     }
 
