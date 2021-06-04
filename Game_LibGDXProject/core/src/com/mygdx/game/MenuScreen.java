@@ -134,17 +134,17 @@ public class MenuScreen implements Screen {
 
             level1Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level1Button.wasDown() == true){
-                game.game.create(GameScreen.Difficulty.EASY);
+                game.game = new GameScreen(game, GameScreen.Difficulty.EASY);
                 game.setScreen(game.game);
             }
             level2Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level2Button.wasDown() == true){
-                game.game.create(GameScreen.Difficulty.MEDIUM);
+                game.game = new GameScreen(game, GameScreen.Difficulty.MEDIUM);
                 game.setScreen(game.game);
             }
             level3Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level3Button.wasDown() == true){
-                game.game.create(GameScreen.Difficulty.HARD);
+                game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
             }
         }

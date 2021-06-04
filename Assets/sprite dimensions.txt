@@ -1,3 +1,4 @@
 player_ship - 26 x 22
 enemy_a - 26 x 22
 enemy_b - 30 x 21
+boss_ship - 38 x 30

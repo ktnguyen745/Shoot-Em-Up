@@ -20,11 +20,11 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
 		menu = new MenuScreen(this);
-		game = new GameScreen(this);
+		game = new GameScreen(this, GameScreen.Difficulty.EASY);
 		menu.show();
 
 		// TODO: Changed to game to make dev easier. Change back to menu for final rendition.
-		setScreen(game);
+		setScreen(menu);
 	}
 
 	@Override
@@ -35,5 +35,9 @@ public class MyGdxGame extends Game {
 	@Override
 	public void dispose () {
 
+	}
+
+	public void showMenu(){
+		setScreen(menu);
 	}
 }
