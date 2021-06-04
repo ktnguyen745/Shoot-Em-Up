@@ -17,11 +17,11 @@ import java.util.ListIterator;
 public class GameScreen implements Screen {
     MyGdxGame game;
 
-    public enum GameState{ENEMY, BOSS, WIN, LOSE};
+    public enum GameState{ENEMY, BOSS, WIN, LOSE}
     private GameState state;
 
     // Game difficulty
-    public enum Difficulty{EASY, MEDIUM, HARD};
+    public enum Difficulty{EASY, MEDIUM, HARD}
     private Difficulty difficulty;
 
     // Constants
@@ -194,18 +194,18 @@ public class GameScreen implements Screen {
         rightLimit = WORLD_WIDTH - enemyShips.get(0).boundingBox.x - enemyShips.get(0).boundingBox.width;
         upLimit = WORLD_HEIGHT - enemyShips.get(0).boundingBox.y - enemyShips.get(0).boundingBox.height;
 
-        //float xMove = enemyShips.get(0).getDirectionVector().x * enemyShips.get(0).movementSpeed * delta;
-        //float yMove = enemyShips.get(0).getDirectionVector().y * enemyShips.get(0).movementSpeed * delta;
+        float xMove = enemyShips.get(0).getDirectionVector().x * enemyShips.get(0).movementSpeed * delta;
+        float yMove = enemyShips.get(0).getDirectionVector().y * enemyShips.get(0).movementSpeed * delta;
 
         // Makes sure ship doesn't move off screen
-        //if (xMove > 0) xMove = Math.min(xMove, rightLimit);
-        //else xMove = Math.max(xMove, leftLimit);
+        if (xMove > 0) xMove = Math.min(xMove, rightLimit);
+        else xMove = Math.max(xMove, leftLimit);
 
-        //if (yMove > 0) yMove = Math.min(yMove, upLimit);
-        //else yMove = Math.max(yMove, downLimit);
+        if (yMove > 0) yMove = Math.min(yMove, upLimit);
+        else yMove = Math.max(yMove, downLimit);
 
         // Update player ship position
-        //enemyShips.get(0).translate(xMove,yMove);
+        enemyShips.get(0).translate(xMove,yMove);
 
     }
 
@@ -214,7 +214,7 @@ public class GameScreen implements Screen {
         if(random < 70){
             enemyShips.add(ShipBuilder.buildEnemy());
         } else {
-            //enemyShips.add(ShipBuilder.buildTripleShot());
+            enemyShips.add(ShipBuilder.buildTripleShot());
         }
     }
 
