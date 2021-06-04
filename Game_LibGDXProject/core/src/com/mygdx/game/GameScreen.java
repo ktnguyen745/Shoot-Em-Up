@@ -17,6 +17,9 @@ import java.util.ListIterator;
 public class GameScreen implements Screen {
     MyGdxGame game;
 
+    public enum GameState{ENEMY, BOSS, WIN, LOSE};
+    private GameState state;
+
     // Game difficulty
     public enum Difficulty{EASY, MEDIUM, HARD};
     private Difficulty difficulty;
@@ -41,8 +44,36 @@ public class GameScreen implements Screen {
     // Game timer
     int backgroundOffset; // Used to scroll along background
 
-    public GameScreen(MyGdxGame game){
+    // Enemy spawning
+    private int totalEnemies;
+    private int maxEnemiesOnScreen;
+    private int currentEnemies;
+    private int enemiesDestroyed;
+    private float spawnDelay = 2.5f;
+    private float spawnTimer = 0f;
+
+    public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
+        this.difficulty = difficulty;
+        this.state = GameState.ENEMY;
+
+        // Set up enemy spawning
+        currentEnemies = 0;
+        enemiesDestroyed = 0;
+        switch (difficulty){
+            case EASY:
+                totalEnemies = 10;
+                maxEnemiesOnScreen = 3;
+                break;
+            case MEDIUM:
+                totalEnemies = 20;
+                maxEnemiesOnScreen = 4;
+                break;
+            case HARD:
+                totalEnemies = 30;
+                maxEnemiesOnScreen = 5;
+                break;
+        }
 
         // Setup screen settings
         this.camera = new OrthographicCamera();
@@ -56,26 +87,14 @@ public class GameScreen implements Screen {
         this.backgroundOffset = 0;
 
         // Setup ships
-        this.playerShip = new PlayerShip(48, 3, 10, 10,
+        this.playerShip = new PlayerShip(64, 3, 10, 10,
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
                 0.5f, "player_ship.png", "shield1.png");
 
-        EnemyShip enemyShip = new EnemyShip(2, 1, 10, 10,
-                WORLD_WIDTH/4, WORLD_HEIGHT * 3/4,
-                0.8f, "enemy_a.png", "shield2.png");
-
-        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
-                (WORLD_WIDTH / 4) * 3, WORLD_HEIGHT * 3/4,
-                1.5f, "enemy_b.png", "shield2.png");
-
         enemyShips = new ArrayList<Ship>();
-        enemyShips.add(enemyShip);
-        enemyShips.add(enemyTripleshot);
     }
 
-    public void create(Difficulty difficulty){
-        this.difficulty = difficulty;
-    }
+    public void create(){ }
 
     @Override
     public void render(float delta) {
@@ -102,10 +121,64 @@ public class GameScreen implements Screen {
             enemy.draw(batch);
         }
 
+        // Remove destroyed ships, handle enemy spawning
+        if(state == GameState.ENEMY){
+            for(int i = 0; i < enemyShips.size(); i++){
+                if(enemyShips.get(i).isDestroyed){
+                    enemyShips.remove(i);
+                    enemiesDestroyed++;
+                }
+            }
+            currentEnemies = enemyShips.size();
+            if(enemiesDestroyed >= totalEnemies){
+                state = GameState.BOSS;
+                enemyShips.clear();
+            } else if(currentEnemies == 0){
+                for(int i = 0; i < maxEnemiesOnScreen; i++){
+                    if(currentEnemies + enemiesDestroyed < totalEnemies) spawnEnemy();
+                }
+                currentEnemies = maxEnemiesOnScreen;
+            } else if (currentEnemies < maxEnemiesOnScreen){
+                spawnTimer += delta;
+                if(spawnTimer >= spawnDelay){
+                    if(currentEnemies + enemiesDestroyed < totalEnemies) spawnEnemy();
+                    spawnTimer = 0;
+                }
+            }
+        } else if (state == GameState.BOSS){
+            if(enemyShips.isEmpty()){
+                enemyShips.add(ShipBuilder.buildBoss(difficulty));
+            }
+            if(enemyShips.get(0).isDestroyed == true){
+                state = GameState.WIN;
+                enemyShips.clear();
+            }
+        }
+        if(playerShip.isDestroyed){
+            state = GameState.LOSE;
+        }
+
+        if(state == GameState.LOSE){
+            game.showMenu();
+        }
+        if(state == GameState.WIN){
+            game.showMenu();
+        }
+
+
         // Check for user input
         detectInput(delta);
 
         batch.end();
+    }
+
+    private void spawnEnemy(){
+        double random = Math.random() * 100;
+        if(random < 70){
+            enemyShips.add(ShipBuilder.buildEnemy());
+        } else {
+            enemyShips.add(ShipBuilder.buildTripleShot());
+        }
     }
 
     private  void detectInput(float delta){
@@ -155,8 +228,6 @@ public class GameScreen implements Screen {
             }
         }
     }
-
-
 
     private void renderBackground(float delta){
         // Scroll up on the background image

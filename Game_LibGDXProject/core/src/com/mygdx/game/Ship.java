@@ -10,6 +10,7 @@ public abstract class Ship {
     // Ship characteristics
     float movementSpeed;
     int shield;
+    public boolean isDestroyed = false;
 
     // Position
     Rectangle boundingBox;
@@ -62,6 +63,8 @@ public abstract class Ship {
     public void hit(){
         if (shield > 0){
             shield--;
+        } else {
+            isDestroyed = true;
         }
     }
 
