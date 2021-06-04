@@ -39,7 +39,7 @@ public class PlayerShip extends Ship {
         float posX = (boundingBox.x + boundingBox.width * 0.5f) - 1;
         float posY = boundingBox.y + boundingBox.height;
         float velX = 0;
-        float velY = 45;
+        float velY = 60;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
     }
 }

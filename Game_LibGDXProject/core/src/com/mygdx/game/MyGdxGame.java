@@ -31,4 +31,8 @@ public class MyGdxGame extends Game {
 	public void dispose () {
 
 	}
+
+	public void showMenu(){
+		setScreen(menu);
+	}
 }

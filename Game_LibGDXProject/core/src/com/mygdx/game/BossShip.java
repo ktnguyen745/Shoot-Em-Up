@@ -6,6 +6,7 @@ public class BossShip extends EnemyShip{
 
     private GameScreen.Difficulty difficulty;
     private double shotPatterns;
+    private double lastShot = 5;
 
     public BossShip(float movementSpeed, int shield, float width, float height,
                     float xCentre, float yCentre, float reloadTime,
@@ -36,16 +37,26 @@ public class BossShip extends EnemyShip{
     // Boss has more complicated attack patterns so it refers to multiple prviate shoot methods to simplify the code
     public void shoot(){
         double random = Math.random() * shotPatterns;
+
+        while(Math.ceil(random) == lastShot){
+            random = Math.random() * shotPatterns;
+        }
+
         if(random <= 1){
             shootPatternA();
+            lastShot = 1;
         } else if (random <= 2){
             shootPatternB();
+            lastShot = 2;
         } else if (random <= 3){
             shootPatternC();
+            lastShot = 3;
         } else if (random <= 4){
             shootPatternD();
+            lastShot = 4;
         } else {
             shootPatternE();
+            lastShot = 5;
         }
     }
 
@@ -150,6 +161,12 @@ public class BossShip extends EnemyShip{
         velX = 25;
         velY = -31;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = -15;
+        velY = -37;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = -25;
+        velY = -31;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
 
         posX = (boundingBox.x + boundingBox.width * 0.5f) + 19;
         posY = boundingBox.y + 8;
@@ -160,6 +177,12 @@ public class BossShip extends EnemyShip{
         velY = -37;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
         velX = -25;
+        velY = -31;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = 15;
+        velY = -37;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = 25;
         velY = -31;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
     }
