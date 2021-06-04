@@ -162,9 +162,11 @@ public class GameScreen implements Screen {
 
         if(state == GameState.LOSE){
             game.showMenu();
+            SoundManager.PauseBackgroundMusic();
         }
         if(state == GameState.WIN){
             game.showMenu();
+            SoundManager.PauseBackgroundMusic();
         }
 
 
@@ -310,5 +312,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        SoundManager.Dispose();
     }
 }

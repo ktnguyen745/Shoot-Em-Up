@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class BulletManager {
 
-    public enum Type {NONE, BULLET};
+    public enum Type {NONE, BULLET}
     private static final int max_bullets = 128;
 
     private Texture bulletTexture;
@@ -91,6 +91,7 @@ public class BulletManager {
                 if(ship.intersects(hitbox)){
                     ship.hit();
                     bullets[i] = Type.NONE;
+                    SoundManager.ENEMY_COLLISION.play();
                 }
             }
         }

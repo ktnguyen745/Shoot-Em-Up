@@ -12,7 +12,7 @@ public class MenuScreen implements Screen {
 
     private MyGdxGame game;
 
-    private enum menuState{MAIN, LEVEL};
+    private enum menuState{MAIN, LEVEL}
     private menuState state;
 
     private SpriteBatch batch;
@@ -117,33 +117,42 @@ public class MenuScreen implements Screen {
         if(state == menuState.MAIN){
             // Update play button
             playButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if(playButton.wasDown() == true){
+            if(playButton.wasDown()){
+                SoundManager.CLICK_BUTTON.play();
                 state = menuState.LEVEL;
             }
 
             // Update quit button
             quitButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if (quitButton.wasDown() == true) {
+            if (quitButton.wasDown()) {
+                SoundManager.QUIT_BUTTON.play();
                 Gdx.app.exit();
             }
         } else {
             backButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if (backButton.wasDown() == true){
+            if (backButton.wasDown()){
+                SoundManager.CLICK_BUTTON.play();
                 state = menuState.MAIN;
             }
 
             level1Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if(level1Button.wasDown() == true){
+            if(level1Button.wasDown()){
+                SoundManager.START_BUTTON.play();
+                SoundManager.StopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.EASY);
                 game.setScreen(game.game);
             }
             level2Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if(level2Button.wasDown() == true){
+            if(level2Button.wasDown()){
+                SoundManager.START_BUTTON.play();
+                SoundManager.StopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.MEDIUM);
                 game.setScreen(game.game);
             }
             level3Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if(level3Button.wasDown() == true){
+            if(level3Button.wasDown()){
+                SoundManager.START_BUTTON.play();
+                SoundManager.StopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
             }

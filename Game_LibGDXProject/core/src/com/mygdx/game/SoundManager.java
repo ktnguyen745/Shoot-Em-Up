@@ -14,9 +14,11 @@ public class SoundManager {
     public static Sound ENEMY_SHOOT_2 = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_07.ogg"));
     public static Sound PLAYER_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Execute_01.ogg"));
     public static Sound PLAYER_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_01.ogg"));
+    public static Sound QUIT_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_02.ogg"));
+    //public static Sound BACK_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_01.ogg"));
 
     // background music
-    private static Music BACKGROUND_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Andromeda Journey.mp3"));
+    private static Music BACKGROUND_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Laser Age level 1 theme.mp3"));
 
     public static void PlayBackgroundMusic() {
         if (!BACKGROUND_MUSIC.isPlaying()) {
@@ -45,6 +47,7 @@ public class SoundManager {
         PLAYER_COLLISION.dispose();
         ENEMY_SHOOT_2.dispose();
         BACKGROUND_MUSIC.dispose();
+        QUIT_BUTTON.dispose();
     }
 
 }
