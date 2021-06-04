@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
         enemiesDestroyed = 0;
         switch (difficulty){
             case EASY:
-                totalEnemies = 10;
+                totalEnemies = 1;
                 maxEnemiesOnScreen = 3;
                 break;
             case MEDIUM:
@@ -163,10 +163,12 @@ public class GameScreen implements Screen {
         if(state == GameState.LOSE){
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
+            SoundManager.LOSE.play();
         }
         if(state == GameState.WIN){
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
+            SoundManager.WIN.play();
         }
 
 

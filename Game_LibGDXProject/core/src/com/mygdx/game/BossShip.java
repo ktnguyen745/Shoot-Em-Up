@@ -58,6 +58,8 @@ public class BossShip extends EnemyShip{
             shootPatternE();
             lastShot = 5;
         }
+
+        SoundManager.BOSS_SHOOT.play();
     }
 
     // This is the easiest attack the boss uses, appears in all difficulties.
