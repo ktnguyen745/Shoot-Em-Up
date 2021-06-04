@@ -92,17 +92,7 @@ public class GameScreen implements Screen {
                 0.5f, "player_ship.png", "shield1.png");
 
         enemyShips = new ArrayList<EnemyShip>();
-        //EnemyShip enemyShip = new EnemyShip(48, 1, 10, 10,
-         //       MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT -5,
-         //       0.8f, "enemy_a.png", "shield2.png");
 
-        //EnemyTripleshot enemyTripleshot = new EnemyTripleshot(2, 2, 15, 11,
-        //        (float) (WORLD_WIDTH / 4) * 3, (float) WORLD_HEIGHT * 3/4,
-         //       1.5f, "enemy_b.png", "shield2.png");
-
-        //enemyShips = new ArrayList<EnemyShip>();
-        //enemyShips.add(enemyShip);
-        //enemyShips.add(enemyTripleshot);
     }
 
     public void create(){ }
@@ -181,21 +171,24 @@ public class GameScreen implements Screen {
         detectInput(delta);
 
         // Enemy movement
-        moveEnemies(delta);
+        ListIterator<EnemyShip> enemyShipListIterator = enemyShips.listIterator();
+        while (enemyShipListIterator.hasNext()) {
+            EnemyShip enemyShip = enemyShipListIterator.next();
+            moveEnemy(enemyShip, delta);
+        }
 
         batch.end();
     }
 
-    private void moveEnemies(float delta) {
+    private void moveEnemy(EnemyShip enemyShip, float delta) {
         float leftLimit, rightLimit, upLimit, downLimit;
-        // TODO: implement for multiple enemies
-        leftLimit = -enemyShips.get(0).boundingBox.x;
-        downLimit = (float) WORLD_HEIGHT / 2 - enemyShips.get(0).boundingBox.y;
-        rightLimit = WORLD_WIDTH - enemyShips.get(0).boundingBox.x - enemyShips.get(0).boundingBox.width;
-        upLimit = WORLD_HEIGHT - enemyShips.get(0).boundingBox.y - enemyShips.get(0).boundingBox.height;
+        leftLimit = -enemyShip.boundingBox.x;
+        downLimit = (float) WORLD_HEIGHT / 2 - enemyShip.boundingBox.y;
+        rightLimit = WORLD_WIDTH - enemyShip.boundingBox.x - enemyShip.boundingBox.width;
+        upLimit = WORLD_HEIGHT - enemyShip.boundingBox.y - enemyShip.boundingBox.height;
 
-        float xMove = enemyShips.get(0).getDirectionVector().x * enemyShips.get(0).movementSpeed * delta;
-        float yMove = enemyShips.get(0).getDirectionVector().y * enemyShips.get(0).movementSpeed * delta;
+        float xMove = enemyShip.getDirectionVector().x * enemyShip.movementSpeed * delta;
+        float yMove = enemyShip.getDirectionVector().y * enemyShip.movementSpeed * delta;
 
         // Makes sure ship doesn't move off screen
         if (xMove > 0) xMove = Math.min(xMove, rightLimit);
@@ -205,7 +198,7 @@ public class GameScreen implements Screen {
         else yMove = Math.max(yMove, downLimit);
 
         // Update player ship position
-        enemyShips.get(0).translate(xMove,yMove);
+        enemyShip.translate(xMove,yMove);
 
     }
 
