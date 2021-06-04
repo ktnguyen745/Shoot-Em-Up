@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -36,10 +37,12 @@ public class GameScreen implements Screen {
     // Graphics
     private SpriteBatch batch;
     private Texture background;
+    private Texture explosionTexture = new Texture("exp2.png");
 
     // Object (ships and bullets)
     private Ship playerShip;
     private ArrayList<Ship> enemyShips;
+    private LinkedList<Explosion> explosionList;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -91,7 +94,9 @@ public class GameScreen implements Screen {
                 WORLD_WIDTH/2, WORLD_HEIGHT/4,
                 0.5f, "player_ship.png", "shield1.png");
 
-        enemyShips = new ArrayList<Ship>();
+        this.enemyShips = new ArrayList<Ship>();
+
+        explosionList = new LinkedList<Explosion>();
     }
 
     public void create(){ }
@@ -125,7 +130,10 @@ public class GameScreen implements Screen {
         if(state == GameState.ENEMY){
             for(int i = 0; i < enemyShips.size(); i++){
                 if(enemyShips.get(i).isDestroyed){
+                    explosionList.add(new Explosion(explosionTexture, enemyShips.get(i).boundingBox, 10f));
+
                     enemyShips.remove(i);
+
                     enemiesDestroyed++;
                 }
             }
@@ -165,11 +173,25 @@ public class GameScreen implements Screen {
             game.showMenu();
         }
 
+        updateAndRenderExplosions(delta);
 
         // Check for user input
         detectInput(delta);
 
         batch.end();
+    }
+
+    private void updateAndRenderExplosions(float deltaTime) {
+        ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
+        while (explosionListIterator.hasNext()) {
+            Explosion explosion = explosionListIterator.next();
+            explosion.update(deltaTime);
+            if (explosion.isFinished()) {
+                explosionListIterator.remove();
+            } else {
+                explosion.draw(batch);
+            }
+        }
     }
 
     private void spawnEnemy(){
