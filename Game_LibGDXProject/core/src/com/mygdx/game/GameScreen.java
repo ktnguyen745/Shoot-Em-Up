@@ -93,6 +93,7 @@ public class GameScreen implements Screen {
 
         enemyShips = new ArrayList<EnemyShip>();
 
+        SoundManager.PlayBackgroundMusic();
     }
 
     public void create(){ }

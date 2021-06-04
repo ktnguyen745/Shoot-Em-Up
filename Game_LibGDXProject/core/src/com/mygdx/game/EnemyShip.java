@@ -45,5 +45,7 @@ public class EnemyShip extends Ship {
         float velX = 0;
         float velY = -50;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+
+        SoundManager.ENEMY_SHOOT.play();
     }
 }

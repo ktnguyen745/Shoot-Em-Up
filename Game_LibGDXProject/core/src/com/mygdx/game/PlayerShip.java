@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
-
 public class PlayerShip extends Ship {
 
     int maxShield;
@@ -34,6 +32,7 @@ public class PlayerShip extends Ship {
         }
     }
 
+
     @Override
     public void shoot() {
         float posX = (boundingBox.x + boundingBox.width * 0.5f) - 1;
@@ -41,5 +40,7 @@ public class PlayerShip extends Ship {
         float velX = 0;
         float velY = 60;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+
+        SoundManager.PLAYER_SHOOT.play();
     }
 }

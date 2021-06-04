@@ -25,5 +25,7 @@ public class EnemyTripleshot extends EnemyShip{
         velX = 15;
         velY = -37;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+
+        SoundManager.ENEMY_SHOOT_2.play();
     }
 }
