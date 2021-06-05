@@ -1,5 +1,8 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 public class PlayerShip extends Ship {
 
     int maxShield;
@@ -32,7 +35,6 @@ public class PlayerShip extends Ship {
         }
     }
 
-
     @Override
     public void shoot() {
         float posX = (boundingBox.x + boundingBox.width * 0.5f) - 1;
@@ -42,5 +44,18 @@ public class PlayerShip extends Ship {
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
 
         SoundManager.PLAYER_SHOOT.play();
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+
+        int x = 65;
+
+        for (int count = 0; count < shield; count++){
+            batch.draw(shieldTexture, x, 2, 3, 3);
+
+            x -= 5;
+        }
     }
 }
