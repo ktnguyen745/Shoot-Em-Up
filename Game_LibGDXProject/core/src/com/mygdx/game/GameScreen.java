@@ -162,7 +162,7 @@ public class GameScreen implements Screen {
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
-                    if(Math.random() < 0.15){
+                    if(Math.random() < 0.1){
                         powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
                                 enemyShips.get(i).getBoundingBox().y));
                     }

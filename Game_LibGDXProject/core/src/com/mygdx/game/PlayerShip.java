@@ -19,7 +19,7 @@ public class PlayerShip extends Ship {
                       float xCentre, float yCentre, float reloadTime,
                       String shipTexture, String shieldTexture) {
         super(movementSpeed, shield, width, height, xCentre, yCentre, reloadTime, shipTexture, shieldTexture);
-        bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
+        bullets = new BulletManager("bullet_red.png", 5.0f, 2.5f, 2.5f);
         maxShield = shield;
         powerUp = PowerUpState.NORMAL;
         shieldIcon = new Texture("shield_icon.png");
@@ -84,9 +84,10 @@ public class PlayerShip extends Ship {
     public void setPowerUp(PowerUpState powerUp){
         this.powerUp = powerUp;
         powerupTime = 0f;
-        shield++;
+        if(shield < 5) shield++;
         if(powerUp == PowerUpState.DOUBLE_SHOT){
             shipTexture = new Texture("player_ship_double.png");
+            reloadTime = 0.5f;
         } else if (powerUp == PowerUpState.SPEED){
             shipTexture = new Texture("player_ship_shield.png");
             reloadTime = 0.3f;
