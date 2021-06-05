@@ -130,7 +130,10 @@ public class GameScreen implements Screen {
         if(state == GameState.ENEMY){
             for(int i = 0; i < enemyShips.size(); i++){
                 if(enemyShips.get(i).isDestroyed){
-                    explosionList.add(new Explosion(explosionTexture, enemyShips.get(i).boundingBox, 10f));
+                    // If an enemy ship is destroyed create an explosion object
+                    explosionList.add(
+                            new Explosion(explosionTexture, enemyShips.get(i).boundingBox,
+                                    0.5f));
 
                     enemyShips.remove(i);
 
@@ -181,11 +184,13 @@ public class GameScreen implements Screen {
         batch.end();
     }
 
-    private void updateAndRenderExplosions(float deltaTime) {
+    private void updateAndRenderExplosions(float delta) {
         ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
+
         while (explosionListIterator.hasNext()) {
             Explosion explosion = explosionListIterator.next();
-            explosion.update(deltaTime);
+            explosion.update(delta);
+
             if (explosion.isFinished()) {
                 explosionListIterator.remove();
             } else {

@@ -16,7 +16,7 @@ class Explosion {
         this.boundingBox = boundingBox;
 
         //split texture
-        TextureRegion[][] textureRegion2D = TextureRegion.split(texture, 64, 64);
+        TextureRegion[][] textureRegion2D = TextureRegion.split(texture, texture.getWidth()/4, texture.getHeight()/4);
 
         //convert to 1D array
         TextureRegion[] textureRegion1D = new TextureRegion[16];
@@ -32,8 +32,8 @@ class Explosion {
         explosionTimer = 0;
     }
 
-    public void update(float deltaTime) {
-        explosionTimer += deltaTime;
+    public void update(float delta) {
+        explosionTimer += delta;
     }
 
     public void draw (SpriteBatch batch) {
