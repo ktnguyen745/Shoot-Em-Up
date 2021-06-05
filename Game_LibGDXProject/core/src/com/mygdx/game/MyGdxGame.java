@@ -23,6 +23,7 @@ public class MyGdxGame extends Game {
 		game = new GameScreen(this, GameScreen.Difficulty.EASY);
 		menu.show();
 
+		// TODO: Changed to game to make dev easier. Change back to menu for final rendition.
 		setScreen(menu);
 	}
 
