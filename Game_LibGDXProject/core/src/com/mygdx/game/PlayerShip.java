@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PlayerShip extends Ship {
 
@@ -48,7 +50,6 @@ public class PlayerShip extends Ship {
         }
     }
 
-
     @Override
     public void shoot() {
         if(powerUp == PowerUpState.NORMAL){
@@ -82,6 +83,19 @@ public class PlayerShip extends Ship {
         powerupTime = 0f;
         if(powerUp == PowerUpState.DOUBLE_SHOT){
             shipTexture = new Texture("player_ship_double.png");
+        }
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+
+        int x = 65;
+
+        for (int count = 0; count < shield; count++){
+            batch.draw(shieldTexture, x, 2, 3, 3);
+
+            x -= 5;
         }
     }
 }

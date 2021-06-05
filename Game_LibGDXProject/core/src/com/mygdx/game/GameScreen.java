@@ -287,8 +287,11 @@ public class GameScreen implements Screen {
 
     private void spawnEnemy(){
         double random = Math.random() * 100;
-        if(random < 70){
+        if(random < 60){
             enemyShips.add(shipBuilder.buildEnemy());
+        }
+        else if(60 <= random && random < 70) {
+            enemyShips.add(shipBuilder.buildInvisibleEnemy());
         } else {
             enemyShips.add(shipBuilder.buildTripleShot());
         }
