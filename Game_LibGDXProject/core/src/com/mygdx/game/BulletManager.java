@@ -97,6 +97,14 @@ public class BulletManager {
         }
     }
 
+    public int countBullets(){
+        int count = 0;
+        for(int i = 0; i < max_bullets; i++){
+            if(bullets[i] != Type.NONE) count++;
+        }
+        return count;
+    }
+
     public void dispose(){
         bulletTexture.dispose();
     }

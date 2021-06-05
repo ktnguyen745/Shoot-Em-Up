@@ -11,6 +11,8 @@ public abstract class Ship {
     float movementSpeed;
     int shield;
     public boolean isDestroyed = false;
+    public boolean wasDestroyed = false;
+    public boolean deletable = false;
 
     // Position
     Rectangle boundingBox;
@@ -40,7 +42,8 @@ public abstract class Ship {
     public void update(float deltaTime){
         lastShotTime += deltaTime;
 
-        if(canFireBullet() == true) shoot();
+        if(canFireBullet() == true && isDestroyed == false) shoot();
+        if(isDestroyed == true && bullets.countBullets() == 0) deletable = true;
 
         bullets.update(deltaTime);
     }
@@ -78,7 +81,7 @@ public abstract class Ship {
 
     // Draws ship and shield together
     public void draw(SpriteBatch batch){
-        batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
+        if(isDestroyed == false) batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
         if (shield > 0) {
             batch.draw(shieldTexture, boundingBox.x, boundingBox.y,boundingBox.width,boundingBox.height);
         }

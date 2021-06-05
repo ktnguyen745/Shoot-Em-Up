@@ -2,24 +2,36 @@ package com.mygdx.game;
 
 public class ShipBuilder {
 
-    // TODO: movementSpeed changes according to the difficulty
+    GameScreen.Difficulty difficulty;
+    private float movespeedMultiplier;
 
-    public static EnemyShip buildEnemy(){
-        EnemyShip enemyShip = new EnemyShip(24, 2, 10, 10,
+    public ShipBuilder(GameScreen.Difficulty difficulty){
+        this.difficulty = difficulty;
+        if(difficulty == GameScreen.Difficulty.EASY){
+            movespeedMultiplier = 1f;
+        } else if (difficulty == GameScreen.Difficulty.MEDIUM){
+            movespeedMultiplier = 1.25f;
+        } else {
+            movespeedMultiplier = 1.5f;
+        }
+    }
+
+    public EnemyShip buildEnemy(){
+        EnemyShip enemyShip = new EnemyShip(36 * movespeedMultiplier, 2, 10, 10,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
                 1.2f, "enemy_a.png", "shield2.png");
         return enemyShip;
     }
 
-    public static EnemyTripleshot buildTripleShot(){
-        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(36, 4, 15, 11,
+    public EnemyTripleshot buildTripleShot(){
+        EnemyTripleshot enemyTripleshot = new EnemyTripleshot(24 * movespeedMultiplier, 4, 15, 11,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
                 2f, "enemy_b.png", "shield2.png");
         return enemyTripleshot;
     }
 
-    public static BossShip buildBoss(GameScreen.Difficulty difficulty){
-        BossShip boss = new BossShip(48, 30, 38, 30,
+    public BossShip buildBoss(){
+        BossShip boss = new BossShip(30 * movespeedMultiplier, 30, 38, 30,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
                 1.5f, "boss_ship.png", "shield2.png", difficulty);
         return boss;

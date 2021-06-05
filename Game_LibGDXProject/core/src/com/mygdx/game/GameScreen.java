@@ -40,6 +40,7 @@ public class GameScreen implements Screen {
     // Object (ships and bullets)
     private Ship playerShip;
     private ArrayList<EnemyShip> enemyShips;
+    private  ShipBuilder shipBuilder;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -56,6 +57,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.difficulty = difficulty;
         this.state = GameState.ENEMY;
+        this.shipBuilder = new ShipBuilder(difficulty);
 
         // Set up enemy spawning
         currentEnemies = 0;
@@ -113,7 +115,7 @@ public class GameScreen implements Screen {
 
         // Check for collisions
         for(Ship enemy : enemyShips){
-            playerShip.collisionCheck(enemy);
+            if(enemy.isDestroyed == false) playerShip.collisionCheck(enemy);
             enemy.collisionCheck(playerShip);
         }
 
@@ -126,30 +128,39 @@ public class GameScreen implements Screen {
         // Remove destroyed ships, handle enemy spawning
         if(state == GameState.ENEMY){
             for(int i = 0; i < enemyShips.size(); i++){
-                if(enemyShips.get(i).isDestroyed){
-                    enemyShips.remove(i);
+                if(enemyShips.get(i).isDestroyed && enemyShips.get(i).wasDestroyed == false){
                     enemiesDestroyed++;
+                    enemyShips.get(i).wasDestroyed = true;
+                    currentEnemies--;
+                }
+                if(enemyShips.get(i).deletable){
+                    enemyShips.remove(i);
                 }
             }
-            currentEnemies = enemyShips.size();
             if(enemiesDestroyed >= totalEnemies){
                 state = GameState.BOSS;
                 enemyShips.clear();
             } else if(currentEnemies == 0){
                 for(int i = 0; i < maxEnemiesOnScreen; i++){
-                    if(currentEnemies + enemiesDestroyed < totalEnemies) spawnEnemy();
+                    if(currentEnemies + enemiesDestroyed < totalEnemies){
+                        spawnEnemy();
+                        currentEnemies++;
+                    }
                 }
                 currentEnemies = maxEnemiesOnScreen;
             } else if (currentEnemies < maxEnemiesOnScreen){
                 spawnTimer += delta;
                 if(spawnTimer >= spawnDelay){
-                    if(currentEnemies + enemiesDestroyed < totalEnemies) spawnEnemy();
+                    if(currentEnemies + enemiesDestroyed < totalEnemies){
+                        spawnEnemy();
+                        currentEnemies++;
+                    }
                     spawnTimer = 0;
                 }
             }
         } else if (state == GameState.BOSS){
             if(enemyShips.isEmpty()){
-                enemyShips.add(ShipBuilder.buildBoss(difficulty));
+                enemyShips.add(shipBuilder.buildBoss());
             }
             if(enemyShips.get(0).isDestroyed == true){
                 state = GameState.WIN;
@@ -227,9 +238,9 @@ public class GameScreen implements Screen {
     private void spawnEnemy(){
         double random = Math.random() * 100;
         if(random < 70){
-            enemyShips.add(ShipBuilder.buildEnemy());
+            enemyShips.add(shipBuilder.buildEnemy());
         } else {
-            enemyShips.add(ShipBuilder.buildTripleShot());
+            enemyShips.add(shipBuilder.buildTripleShot());
         }
     }
 
