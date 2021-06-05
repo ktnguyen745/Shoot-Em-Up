@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class PlayerShip extends Ship {
 
     public enum PowerUpState {NORMAL, DOUBLE_SHOT};
@@ -32,6 +34,7 @@ public class PlayerShip extends Ship {
             powerupTime += deltaTime;
             if(powerupTime >= powerupDuration){
                 powerUp = PowerUpState.NORMAL;
+                shipTexture = new Texture("player_ship.png");
             }
         }
 
@@ -77,5 +80,8 @@ public class PlayerShip extends Ship {
     public void setPowerUp(PowerUpState powerUp){
         this.powerUp = powerUp;
         powerupTime = 0f;
+        if(powerUp == PowerUpState.DOUBLE_SHOT){
+            shipTexture = new Texture("player_ship_double.png");
+        }
     }
 }
