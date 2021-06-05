@@ -87,4 +87,8 @@ public abstract class Ship {
         }
         bullets.render(batch);
     }
+
+    public Rectangle getBoundingBox(){
+        return boundingBox;
+    }
 }

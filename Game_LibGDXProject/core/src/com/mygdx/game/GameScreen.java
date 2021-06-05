@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -39,10 +40,11 @@ public class GameScreen implements Screen {
     private Texture explosionTexture = new Texture("exp2.png");
 
     // Object (ships and bullets)
-    private Ship playerShip;
+    private PlayerShip playerShip;
     private ShipBuilder shipBuilder;
     private ArrayList<EnemyShip> enemyShips;
     private LinkedList<Explosion> explosionList;
+    private ArrayList<PowerUp> powerUps;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -96,8 +98,8 @@ public class GameScreen implements Screen {
                 0.5f, "player_ship.png", "shield1.png");
 
         enemyShips = new ArrayList<EnemyShip>();
-
         explosionList = new LinkedList<Explosion>();
+        powerUps = new ArrayList<PowerUp>();
 
         SoundManager.PlayBackgroundMusic();
     }
@@ -111,6 +113,11 @@ public class GameScreen implements Screen {
         // Generate background
         renderBackground(delta);
 
+        // Update powerups
+        for(PowerUp p : powerUps){
+            p.update(delta);
+        }
+
         // Update ships
         playerShip.update(delta);
         for(Ship enemy : enemyShips){
@@ -123,10 +130,24 @@ public class GameScreen implements Screen {
             enemy.collisionCheck(playerShip);
         }
 
-        // Render ships
+        // Check for powerup collision
+        for(PowerUp p : powerUps){
+            if(playerShip.intersects(p.boundingBox())){
+                playerShip.setPowerUp(p.type);
+                SoundManager.CLICK_BUTTON.play();
+                powerUps.remove(p);
+            }
+        }
+
+        // Render ships & powerups
         playerShip.draw(batch);
         for(Ship enemy : enemyShips){
             enemy.draw(batch);
+        }
+
+        // Render powerups
+        for(PowerUp p : powerUps){
+            p.draw(batch);
         }
 
         // Remove destroyed ships, handle enemy spawning
@@ -141,12 +162,15 @@ public class GameScreen implements Screen {
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
+                    if(Math.random() < 0.1){
+                        powerUps.add(PowerupBuilder.buildDoubleshot(enemyShips.get(i).getBoundingBox().x,
+                                enemyShips.get(i).getBoundingBox().y));
+                    }
                 }
                 if(enemyShips.get(i).deletable){
                     enemyShips.remove(i);
                 }
             }
-            currentEnemies = enemyShips.size();
             if(enemiesDestroyed >= totalEnemies){
                 state = GameState.BOSS;
                 enemyShips.clear();
