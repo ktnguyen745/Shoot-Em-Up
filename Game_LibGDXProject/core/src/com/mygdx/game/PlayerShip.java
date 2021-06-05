@@ -53,7 +53,7 @@ public class PlayerShip extends Ship {
         int x = 65;
 
         for (int count = 0; count < shield; count++){
-            batch.draw(shieldTexture, x, 2, 3, 3);
+            batch.draw(shipTexture, x, 2, 3, 3);
 
             x -= 5;
         }
