@@ -131,11 +131,11 @@ public class GameScreen implements Screen {
         }
 
         // Check for powerup collision
-        for(PowerUp p : powerUps){
-            if(playerShip.intersects(p.boundingBox())){
-                playerShip.setPowerUp(p.type);
+        for(int i = 0; i < powerUps.size(); i++){
+            if(playerShip.intersects(powerUps.get(i).boundingBox())){
+                playerShip.setPowerUp(powerUps.get(i).type);
                 SoundManager.CLICK_BUTTON.play();
-                powerUps.remove(p);
+                powerUps.remove(i);
             }
         }
 
@@ -162,7 +162,7 @@ public class GameScreen implements Screen {
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
-                    if(Math.random() < 0.1){
+                    if(Math.random() < 0.15){
                         powerUps.add(PowerupBuilder.buildDoubleshot(enemyShips.get(i).getBoundingBox().x,
                                 enemyShips.get(i).getBoundingBox().y));
                     }
@@ -290,7 +290,7 @@ public class GameScreen implements Screen {
         if(random < 60){
             enemyShips.add(shipBuilder.buildEnemy());
         }
-        else if(60 <= random && random < 70) {
+        else if(60 <= random && random < 75) {
             enemyShips.add(shipBuilder.buildInvisibleEnemy());
         } else {
             enemyShips.add(shipBuilder.buildTripleShot());
