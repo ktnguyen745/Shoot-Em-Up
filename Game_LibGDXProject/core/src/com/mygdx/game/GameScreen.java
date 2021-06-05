@@ -163,7 +163,7 @@ public class GameScreen implements Screen {
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
                     if(Math.random() < 0.15){
-                        powerUps.add(PowerupBuilder.buildDoubleshot(enemyShips.get(i).getBoundingBox().x,
+                        powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
                                 enemyShips.get(i).getBoundingBox().y));
                     }
                 }

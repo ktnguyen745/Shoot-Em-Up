@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PlayerShip extends Ship {
 
-    public enum PowerUpState {NORMAL, DOUBLE_SHOT};
+    public enum PowerUpState {NORMAL, DOUBLE_SHOT, SPEED};
     private PowerUpState powerUp;
     float powerupDuration = 10f;
     float powerupTime = 0f;
@@ -13,6 +13,7 @@ public class PlayerShip extends Ship {
     int maxShield;
     float shieldRecharge = 10f;
     float rechargeTime = 0f;
+    Texture shieldIcon;
 
     public PlayerShip(float movementSpeed, int shield, float width, float height,
                       float xCentre, float yCentre, float reloadTime,
@@ -21,6 +22,7 @@ public class PlayerShip extends Ship {
         bullets = new BulletManager("bullet_red.png", 5.0f, 2f, 2f);
         maxShield = shield;
         powerUp = PowerUpState.NORMAL;
+        shieldIcon = new Texture("shield_icon.png");
     }
 
     @Override
@@ -35,6 +37,7 @@ public class PlayerShip extends Ship {
             powerupTime += deltaTime;
             if(powerupTime >= powerupDuration){
                 powerUp = PowerUpState.NORMAL;
+                reloadTime = 0.5f;
                 shipTexture = new Texture("player_ship.png");
             }
         }
@@ -52,10 +55,10 @@ public class PlayerShip extends Ship {
 
     @Override
     public void shoot() {
-        if(powerUp == PowerUpState.NORMAL){
-            shoot_normal();
-        } else if (powerUp == PowerUpState.DOUBLE_SHOT){
+        if (powerUp == PowerUpState.DOUBLE_SHOT){
             shoot_double();
+        } else {
+            shoot_normal();
         }
         SoundManager.PLAYER_SHOOT.play();
     }
@@ -81,8 +84,12 @@ public class PlayerShip extends Ship {
     public void setPowerUp(PowerUpState powerUp){
         this.powerUp = powerUp;
         powerupTime = 0f;
+        shield++;
         if(powerUp == PowerUpState.DOUBLE_SHOT){
             shipTexture = new Texture("player_ship_double.png");
+        } else if (powerUp == PowerUpState.SPEED){
+            shipTexture = new Texture("player_ship_shield.png");
+            reloadTime = 0.3f;
         }
     }
 
@@ -93,7 +100,7 @@ public class PlayerShip extends Ship {
         int x = 65;
 
         for (int count = 0; count < shield; count++){
-            batch.draw(shipTexture, x, 2, 3, 3);
+            batch.draw(shieldIcon, x, 2, 5, 5);
 
             x -= 5;
         }
