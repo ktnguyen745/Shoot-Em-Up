@@ -36,11 +36,13 @@ public class GameScreen implements Screen {
     // Graphics
     private SpriteBatch batch;
     private Texture background;
+    private Texture explosionTexture = new Texture("exp2.png");
 
     // Object (ships and bullets)
     private Ship playerShip;
+    private ShipBuilder shipBuilder;
     private ArrayList<EnemyShip> enemyShips;
-    private  ShipBuilder shipBuilder;
+    private LinkedList<Explosion> explosionList;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -95,6 +97,8 @@ public class GameScreen implements Screen {
 
         enemyShips = new ArrayList<EnemyShip>();
 
+        explosionList = new LinkedList<Explosion>();
+
         SoundManager.PlayBackgroundMusic();
     }
 
@@ -128,7 +132,12 @@ public class GameScreen implements Screen {
         // Remove destroyed ships, handle enemy spawning
         if(state == GameState.ENEMY){
             for(int i = 0; i < enemyShips.size(); i++){
+                // If an enemy ship is destroyed create an explosion object
                 if(enemyShips.get(i).isDestroyed && enemyShips.get(i).wasDestroyed == false){
+                    explosionList.add(
+                            new Explosion(explosionTexture, enemyShips.get(i).boundingBox,
+                                    0.5f));
+
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
@@ -137,6 +146,7 @@ public class GameScreen implements Screen {
                     enemyShips.remove(i);
                 }
             }
+            currentEnemies = enemyShips.size();
             if(enemiesDestroyed >= totalEnemies){
                 state = GameState.BOSS;
                 enemyShips.clear();
@@ -182,6 +192,7 @@ public class GameScreen implements Screen {
             SoundManager.WIN.play();
         }
 
+        updateAndRenderExplosions(delta);
 
         // Check for user input
         detectInput(delta);
@@ -233,6 +244,21 @@ public class GameScreen implements Screen {
         // Update player ship position
         enemyShip.translate(xMove,yMove);
 
+    }
+
+    private void updateAndRenderExplosions(float delta) {
+        ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
+
+        while (explosionListIterator.hasNext()) {
+            Explosion explosion = explosionListIterator.next();
+            explosion.update(delta);
+
+            if (explosion.isFinished()) {
+                explosionListIterator.remove();
+            } else {
+                explosion.draw(batch);
+            }
+        }
     }
 
     private void spawnEnemy(){
@@ -291,8 +317,6 @@ public class GameScreen implements Screen {
             }
         }
     }
-
-
 
     private void renderBackground(float delta){
         // Scroll up on the background image
