@@ -19,21 +19,21 @@ public class ShipBuilder {
     public EnemyShip buildEnemy(){
         EnemyShip enemyShip = new EnemyShip(40 * movespeedMultiplier, 2, 10, 10,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
-                2.4f, "enemy_a.png", "shield2.png");
+                2f, "enemy_a.png", "shield2.png");
         return enemyShip;
     }
 
-    public EnemyShip buildInvisibleEnemy(){
-        EnemyShip enemyShip = new EnemyShip(36 * movespeedMultiplier, 2, 10, 10,
+    public EnemyInvisible buildInvisibleEnemy(){
+        EnemyInvisible invisible = new EnemyInvisible(20 * movespeedMultiplier, 4, 15, 10,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
-                1.2f, "enemy_invisible.png", "shield2.png");
-        return enemyShip;
+                2.5f, "enemy_invisible.png", "shield2.png");
+        return invisible;
     }
 
     public EnemyTripleshot buildTripleShot(){
         EnemyTripleshot enemyTripleshot = new EnemyTripleshot(24 * movespeedMultiplier, 4, 15, 11,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
-                2f, "enemy_b.png", "shield2.png");
+                2.25f, "enemy_b.png", "shield2.png");
         return enemyTripleshot;
     }
 
