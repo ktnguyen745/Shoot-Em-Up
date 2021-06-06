@@ -188,6 +188,7 @@ public class MenuScreen implements Screen {
             playButton.draw(batch);
             quitButton.draw(batch);
             title.draw(batch);
+            SoundManager.PlayBackgroundMusic();
         } else if (state == menuState.LEVEL) {
             backButton.draw(batch);
             level1Button.draw(batch);
@@ -196,8 +197,10 @@ public class MenuScreen implements Screen {
             levelSelect.draw(batch);
         } else if (state == menuState.WIN) {
             winButton.draw(batch);
+            SoundManager.StopBossMusic();
         } else if (state == menuState.LOSE) {
             loseButton.draw(batch);
+            SoundManager.StopBossMusic();
         }
 
         batch.end();

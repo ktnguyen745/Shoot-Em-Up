@@ -22,13 +22,32 @@ public class SoundManager {
     // background music
     private static Music BACKGROUND_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Laser Age level 1 theme.mp3"));
 
+    // boss music
+    private static Music BOSS_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Laser Age level 3 theme.mp3"));
+
     public static void PlayBackgroundMusic() {
+        if (BOSS_MUSIC.isPlaying()) {
+            StopBossMusic();
+        }
         if (!BACKGROUND_MUSIC.isPlaying()) {
             BACKGROUND_MUSIC.isLooping();
             BACKGROUND_MUSIC.setVolume(0.5f);
             BACKGROUND_MUSIC.play();
         }
     }
+
+    public static void PlayBossMusic() {
+        if (BACKGROUND_MUSIC.isPlaying()) {
+            StopBackgroundMusic();
+        }
+        BOSS_MUSIC.isLooping();
+        BOSS_MUSIC.setVolume(0.6f);
+        if (!BOSS_MUSIC.isPlaying()) {
+            BOSS_MUSIC.play();
+        }
+    }
+
+    public static void StopBossMusic() {BOSS_MUSIC.stop();}
 
     public static void PauseBackgroundMusic() {
         BACKGROUND_MUSIC.pause();
@@ -53,6 +72,7 @@ public class SoundManager {
         BOSS_SHOOT.dispose();
         WIN.dispose();
         LOSE.dispose();
+        BOSS_MUSIC.dispose();
     }
 
 }

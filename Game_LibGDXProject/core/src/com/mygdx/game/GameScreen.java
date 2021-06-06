@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
         enemiesDestroyed = 0;
         switch (difficulty){
             case EASY:
-                totalEnemies = 10;
+                totalEnemies = 1;
                 maxEnemiesOnScreen = 3;
                 break;
             case MEDIUM:
@@ -200,6 +200,7 @@ public class GameScreen implements Screen {
                 state = GameState.WIN;
                 enemyShips.clear();
             }
+            playBossMusic();
         }
         if(playerShip.isDestroyed){
             state = GameState.LOSE;
@@ -395,5 +396,11 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    private void playBossMusic() {
+        if (state == GameState.BOSS) {
+            SoundManager.PlayBossMusic();
+        }
     }
 }
