@@ -316,10 +316,12 @@ public class GameScreen implements Screen {
             enemyShips.add(shipBuilder.buildTripleShot());
         }
 
-        for (int i = 0; i < enemyShips.size(); i++) {
-            teleports.add (new Teleport(teleportTexture, enemyShips.get(i).boundingBox,
-                            0.1f));
-        }
+        teleports.add(new Teleport(teleportTexture, enemyShips.get(enemyShips.size()-1).boundingBox, 0.4f));
+
+//        for (int i = 0; i < enemyShips.size(); i++) {
+//            teleports.add (new Teleport(teleportTexture, enemyShips.get(i).boundingBox,
+//                            0.4f));
+//        }
     }
 
     private  void detectInput(float delta){
