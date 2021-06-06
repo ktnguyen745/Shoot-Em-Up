@@ -13,7 +13,7 @@ import java.util.Random;
 public class MyGdxGame extends Game {
 	public MenuScreen menu;
 	public GameScreen game;
-	public enum gameState{WIN, LOSE}
+	public enum gameState{MENU, WIN, LOSE}
 	private gameState state;
 
 	// random number generator
@@ -21,6 +21,7 @@ public class MyGdxGame extends Game {
 	
 	@Override
 	public void create () {
+		state = gameState.MENU;
 		menu = new MenuScreen(this);
 		game = new GameScreen(this, GameScreen.Difficulty.EASY);
 		menu.show();
