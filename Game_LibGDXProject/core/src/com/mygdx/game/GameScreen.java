@@ -206,11 +206,13 @@ public class GameScreen implements Screen {
         }
 
         if(state == GameState.LOSE){
+            game.setState(MyGdxGame.gameState.LOSE);
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
             SoundManager.LOSE.play();
         }
         if(state == GameState.WIN){
+            game.setState(MyGdxGame.gameState.WIN);
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
             SoundManager.WIN.play();
@@ -393,6 +395,5 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        SoundManager.Dispose();
     }
 }

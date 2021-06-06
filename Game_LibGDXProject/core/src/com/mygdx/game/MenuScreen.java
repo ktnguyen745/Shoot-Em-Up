@@ -6,13 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import javax.xml.soap.Text;
-
 public class MenuScreen implements Screen {
 
     private MyGdxGame game;
 
-    private enum menuState{MAIN, LEVEL}
+    public enum menuState{MAIN, LEVEL, WIN, LOSE}
     private menuState state;
 
     private SpriteBatch batch;
@@ -25,6 +23,8 @@ public class MenuScreen implements Screen {
     private Button level3Button;
     private Button title;
     private Button levelSelect;
+    private Button winButton;
+    private Button loseButton;
 
     public MenuScreen(MyGdxGame game){
         this.game = game;
@@ -33,7 +33,6 @@ public class MenuScreen implements Screen {
     public void create(){
 
         batch = new SpriteBatch();
-        state = menuState.MAIN;
 
         // Get screen width and height
         int screenWidth = Gdx.graphics.getWidth();
@@ -102,6 +101,20 @@ public class MenuScreen implements Screen {
         // Calculate size and position for level select then make the button
         buttonHeight = buttonWidth / 6;
         levelSelect = new Button(x, y, buttonWidth, buttonHeight, levelSelectTexture, levelSelectTexture);
+
+
+        // Get textures for win and lose screen
+        Texture winTexture = new Texture(Gdx.files.internal("youWin.jpg"));
+        Texture loseTexture = new Texture(Gdx.files.internal("tryAgain.jpg"));
+
+        // Calculate size and position for win and lose screen
+        x = screenWidth / 2 - screenWidth / 4;
+        y = screenHeight / 2 - screenHeight / 6 ;
+        winButton = new Button(x, y, (float) screenWidth/2, (float) screenHeight/3, winTexture, winTexture);
+        loseButton = new Button(x, y, (float) screenWidth/2, (float) screenHeight/3, loseTexture, loseTexture);
+
+        setMenuState();
+
     }
 
     @Override
@@ -128,7 +141,7 @@ public class MenuScreen implements Screen {
                 SoundManager.QUIT_BUTTON.play();
                 Gdx.app.exit();
             }
-        } else {
+        } else if (state == menuState.LEVEL) {
             backButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if (backButton.wasDown()){
                 SoundManager.CLICK_BUTTON.play();
@@ -156,6 +169,18 @@ public class MenuScreen implements Screen {
                 game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
             }
+        } else if (state == menuState.WIN) {
+            winButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if(winButton.wasDown()){
+                SoundManager.CLICK_BUTTON.play();
+                state = menuState.MAIN;
+            }
+        } else if (state == menuState.LOSE) {
+            loseButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if (loseButton.wasDown()) {
+                SoundManager.CLICK_BUTTON.play();
+                state = menuState.MAIN;
+            }
         }
 
         batch.begin();
@@ -163,12 +188,16 @@ public class MenuScreen implements Screen {
             playButton.draw(batch);
             quitButton.draw(batch);
             title.draw(batch);
-        } else {
+        } else if (state == menuState.LEVEL) {
             backButton.draw(batch);
             level1Button.draw(batch);
             level2Button.draw(batch);
             level3Button.draw(batch);
             levelSelect.draw(batch);
+        } else if (state == menuState.WIN) {
+            winButton.draw(batch);
+        } else if (state == menuState.LOSE) {
+            loseButton.draw(batch);
         }
 
         batch.end();
@@ -202,5 +231,21 @@ public class MenuScreen implements Screen {
         level3Button.dispose();
         level2Button.dispose();
         level1Button.dispose();
+        winButton.dispose();
+        loseButton.dispose();
+    }
+
+    public void setMenuState() {
+        switch (this.game.getState()) {
+            case WIN:
+                this.state = menuState.WIN;
+                break;
+            case LOSE:
+                this.state = menuState.LOSE;
+                break;
+            default:
+                this.state = menuState.MAIN;
+                break;
+        }
     }
 }
