@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Texture background;
     private Texture explosionTexture = new Texture("exp2.png");
+    private Texture teleportTexture = new Texture("teleport.png");
 
     // Object (ships and bullets)
     private PlayerShip playerShip;
@@ -45,6 +46,7 @@ public class GameScreen implements Screen {
     private ArrayList<EnemyShip> enemyShips;
     private LinkedList<Explosion> explosionList;
     private ArrayList<PowerUp> powerUps;
+    private LinkedList<Teleport> teleports;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -68,7 +70,7 @@ public class GameScreen implements Screen {
         enemiesDestroyed = 0;
         switch (difficulty){
             case EASY:
-                totalEnemies = 1;
+                totalEnemies = 10;
                 maxEnemiesOnScreen = 3;
                 break;
             case MEDIUM:
@@ -100,6 +102,7 @@ public class GameScreen implements Screen {
         enemyShips = new ArrayList<EnemyShip>();
         explosionList = new LinkedList<Explosion>();
         powerUps = new ArrayList<PowerUp>();
+        teleports = new LinkedList<Teleport>();
 
         SoundManager.PlayBackgroundMusic();
     }
@@ -201,25 +204,24 @@ public class GameScreen implements Screen {
                 enemyShips.clear();
             }
             playBossMusic();
-        }
-        if(playerShip.isDestroyed){
-            state = GameState.LOSE;
-        }
-
-        if(state == GameState.LOSE){
+        } else if (state == GameState.LOSE) {
             game.setState(MyGdxGame.gameState.LOSE);
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
             SoundManager.LOSE.play();
-        }
-        if(state == GameState.WIN){
+        } else if (state == GameState.WIN) {
             game.setState(MyGdxGame.gameState.WIN);
             game.showMenu();
             SoundManager.PauseBackgroundMusic();
             SoundManager.WIN.play();
         }
+        if(playerShip.isDestroyed){
+            state = GameState.LOSE;
+        }
 
         updateAndRenderExplosions(delta);
+
+        updateAndRenderTeleports(delta);
 
         // Check for user input
         detectInput(delta);
@@ -288,15 +290,35 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void spawnEnemy(){
-        double random = Math.random() * 100;
-        if(random < 60){
-            enemyShips.add(shipBuilder.buildEnemy());
+    private void updateAndRenderTeleports(float delta) {
+        ListIterator<Teleport> teleportListIterator = teleports.listIterator();
+
+        while (teleportListIterator.hasNext()) {
+            Teleport teleport = teleportListIterator.next();
+            teleport.update(delta);
+
+            if (teleport.isFinished()) {
+                teleportListIterator.remove();
+            } else {
+                teleport.draw(batch);
+            }
         }
-        else if(60 <= random && random < 75) {
+    }
+
+
+    private void spawnEnemy() {
+        double random = Math.random() * 100;
+        if (random < 60) {
+            enemyShips.add(shipBuilder.buildEnemy());
+        } else if (60 <= random && random < 75) {
             enemyShips.add(shipBuilder.buildInvisibleEnemy());
         } else {
             enemyShips.add(shipBuilder.buildTripleShot());
+        }
+
+        for (int i = 0; i < enemyShips.size(); i++) {
+            teleports.add (new Teleport(teleportTexture, enemyShips.get(i).boundingBox,
+                            0.1f));
         }
     }
 

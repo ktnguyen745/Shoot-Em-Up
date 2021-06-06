@@ -31,7 +31,7 @@ public class SoundManager {
         }
         if (!BACKGROUND_MUSIC.isPlaying()) {
             BACKGROUND_MUSIC.isLooping();
-            BACKGROUND_MUSIC.setVolume(0.5f);
+            BACKGROUND_MUSIC.setVolume(0.3f);
             BACKGROUND_MUSIC.play();
         }
     }
@@ -41,7 +41,7 @@ public class SoundManager {
             StopBackgroundMusic();
         }
         BOSS_MUSIC.isLooping();
-        BOSS_MUSIC.setVolume(0.6f);
+        BOSS_MUSIC.setVolume(1.0f);
         if (!BOSS_MUSIC.isPlaying()) {
             BOSS_MUSIC.play();
         }
