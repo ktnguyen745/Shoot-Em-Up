@@ -21,6 +21,7 @@ public class MenuScreen implements Screen {
     private Button level1Button;
     private Button level2Button;
     private Button level3Button;
+    private Button infiniteMode;
     private Button title;
     private Button levelSelect;
     private Button winButton;
@@ -69,23 +70,28 @@ public class MenuScreen implements Screen {
         Texture level1 = new Texture(Gdx.files.internal("level1_button.png"));
         Texture level2 = new Texture(Gdx.files.internal("level2_button.png"));
         Texture level3 = new Texture(Gdx.files.internal("level3_button.png"));
+        Texture infinite = new Texture(Gdx.files.internal("infinite_mode.png"));
 
         // Calculate sizes for buttons
         buttonWidth = screenWidth / 4;
         buttonHeight = screenHeight / 8; //(buttonWidth / level1.getWidth()) * level1.getHeight();
 
         // Calculate position of level 1 button and create button
-        x = screenWidth / 16;
-        y = (screenHeight / 2) - (buttonHeight / 2);
+        x = (screenWidth / 4) - (buttonWidth / 2);
+        y = (screenHeight / 2) + (buttonHeight / 2);
         level1Button = new Button(x, y, buttonWidth, buttonHeight, level1, level1);
 
         // Calculate position of level 2 button and create button
-        x = (screenWidth / 2) - (buttonWidth / 2);
+        x = (screenWidth * 3 / 4) - (buttonWidth / 2);
         level2Button = new Button(x, y, buttonWidth, buttonHeight, level2, level2);
 
         // Calculate position of level 3 button and create button
-        x = screenWidth - ((screenWidth / 16) + buttonWidth);
+        x = (screenWidth / 4) - (buttonWidth / 2);
+        y = (screenHeight / 2) - (buttonHeight);
         level3Button = new Button(x, y, buttonWidth, buttonHeight, level3, level3);
+
+        x = (screenWidth * 3 / 4) - (buttonWidth / 2);
+        infiniteMode = new Button(x, y, buttonWidth, buttonHeight, infinite, infinite);
 
         // Get textures for title and level select
         Texture titleTexture = new Texture(Gdx.files.internal("title.png"));
@@ -169,6 +175,13 @@ public class MenuScreen implements Screen {
                 game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
             }
+            infiniteMode.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if(infiniteMode.wasDown()){
+                SoundManager.START_BUTTON.play();
+                SoundManager.StopBackgroundMusic();
+                game.game = new GameScreen(game, GameScreen.Difficulty.INFINITE);
+                game.setScreen(game.game);
+            }
         } else if (state == menuState.WIN) {
             winButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(winButton.wasDown()){
@@ -194,6 +207,7 @@ public class MenuScreen implements Screen {
             level1Button.draw(batch);
             level2Button.draw(batch);
             level3Button.draw(batch);
+            infiniteMode.draw(batch);
             levelSelect.draw(batch);
         } else if (state == menuState.WIN) {
             winButton.draw(batch);

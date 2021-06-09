@@ -28,7 +28,7 @@ public class GameScreen implements Screen {
     private GameState state;
 
     // Game difficulty
-    public enum Difficulty{EASY, MEDIUM, HARD}
+    public enum Difficulty{EASY, MEDIUM, HARD, INFINITE}
     private Difficulty difficulty;
 
     // Constants
@@ -93,6 +93,9 @@ public class GameScreen implements Screen {
                 totalEnemies = 30;
                 maxEnemiesOnScreen = 5;
                 break;
+            case INFINITE:
+                totalEnemies = 105;
+                maxEnemiesOnScreen = 5;
         }
 
         // Setup screen settings
@@ -213,21 +216,30 @@ public class GameScreen implements Screen {
                     enemyShips.remove(i);
                 }
             }
-            if(enemiesDestroyed >= totalEnemies){
+            if(difficulty != Difficulty.INFINITE && enemiesDestroyed >= totalEnemies) {
+                state = GameState.BOSS;
+                enemyShips.clear();
+            } else if (difficulty == Difficulty.INFINITE && enemiesDestroyed % 20 == 0 && enemiesDestroyed != 0){
                 state = GameState.BOSS;
                 enemyShips.clear();
             } else if(currentEnemies == 0){
                 for(int i = 0; i < maxEnemiesOnScreen; i++){
-                    if(currentEnemies + enemiesDestroyed < totalEnemies){
+                    if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
+                        spawnEnemy();
+                        currentEnemies++;
+                    } else if(difficulty == Difficulty.INFINITE && currentEnemies + enemiesDestroyed % 20 != 0
+                            || enemiesDestroyed == 0){
                         spawnEnemy();
                         currentEnemies++;
                     }
                 }
-                currentEnemies = maxEnemiesOnScreen;
             } else if (currentEnemies < maxEnemiesOnScreen){
                 spawnTimer += delta;
                 if(spawnTimer >= spawnDelay){
-                    if(currentEnemies + enemiesDestroyed < totalEnemies){
+                    if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
+                        spawnEnemy();
+                        currentEnemies++;
+                    } else if(difficulty == Difficulty.INFINITE && currentEnemies + enemiesDestroyed % 20 != 0){
                         spawnEnemy();
                         currentEnemies++;
                     }
@@ -235,14 +247,20 @@ public class GameScreen implements Screen {
                 }
             }
         } else if (state == GameState.BOSS){
+            playBossMusic();
             if(enemyShips.isEmpty()){
                 enemyShips.add(shipBuilder.buildBoss());
             }
-            if(enemyShips.get(0).isDestroyed == true){
+            if(difficulty != Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
                 state = GameState.WIN;
                 enemyShips.clear();
             }
-            playBossMusic();
+            if(difficulty == Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
+                enemiesDestroyed++;
+                state = GameState.ENEMY;
+                SoundManager.PlayBackgroundMusic();
+            }
+
         } else if (state == GameState.LOSE) {
             game.setState(MyGdxGame.gameState.LOSE);
             game.showMenu();
@@ -256,6 +274,9 @@ public class GameScreen implements Screen {
         }
         if(playerShip.isDestroyed){
             state = GameState.LOSE;
+        }
+        if(difficulty == Difficulty.INFINITE && enemiesDestroyed == totalEnemies){
+            state = GameState.WIN;
         }
 
         updateAndRenderExplosions(delta);
@@ -364,11 +385,6 @@ public class GameScreen implements Screen {
         }
 
         teleports.add(new Teleport(teleportTexture, enemyShips.get(enemyShips.size()-1).boundingBox, 0.4f));
-
-//        for (int i = 0; i < enemyShips.size(); i++) {
-//            teleports.add (new Teleport(teleportTexture, enemyShips.get(i).boundingBox,
-//                            0.4f));
-//        }
     }
 
     private  void detectInput(float delta){

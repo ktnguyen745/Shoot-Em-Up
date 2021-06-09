@@ -31,6 +31,11 @@ public class BossShip extends EnemyShip{
                 this.reloadTime = 1f;
                 this.shield = 50;
                 break;
+            case INFINITE:
+                this.shotPatterns = 5;
+                this.reloadTime = reloadTime;
+                this.shield = shield;
+                break;
         }
     }
 
