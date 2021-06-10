@@ -56,7 +56,7 @@ public class ShipBuilder {
     private void update(){
         shipsBuilt++;
         if(shipsBuilt % 10 == 0){
-            infiniteMultiplier += 0.1;
+            infiniteMultiplier += 0.15;
         }
     }
 }

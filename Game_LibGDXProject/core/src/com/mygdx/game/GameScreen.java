@@ -227,8 +227,8 @@ public class GameScreen implements Screen {
                     if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
                         spawnEnemy();
                         currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && currentEnemies + enemiesDestroyed % 20 != 0
-                            || enemiesDestroyed == 0){
+                    } else if(difficulty == Difficulty.INFINITE && ((currentEnemies + enemiesDestroyed) % 20 != 0
+                            || enemiesDestroyed == 0)){
                         spawnEnemy();
                         currentEnemies++;
                     }
@@ -239,7 +239,7 @@ public class GameScreen implements Screen {
                     if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
                         spawnEnemy();
                         currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && currentEnemies + enemiesDestroyed % 20 != 0){
+                    } else if(difficulty == Difficulty.INFINITE && (currentEnemies + enemiesDestroyed) % 20 != 0){
                         spawnEnemy();
                         currentEnemies++;
                     }
@@ -250,13 +250,15 @@ public class GameScreen implements Screen {
             playBossMusic();
             if(enemyShips.isEmpty()){
                 enemyShips.add(shipBuilder.buildBoss());
+                currentEnemies = 1;
             }
             if(difficulty != Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
                 state = GameState.WIN;
                 enemyShips.clear();
             }
             if(difficulty == Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
-                enemiesDestroyed++;
+//                enemiesDestroyed++;
+                currentEnemies--;
                 state = GameState.ENEMY;
                 SoundManager.PlayBackgroundMusic();
             }
