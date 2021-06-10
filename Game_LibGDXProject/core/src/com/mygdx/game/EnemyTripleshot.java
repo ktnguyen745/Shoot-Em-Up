@@ -28,4 +28,7 @@ public class EnemyTripleshot extends EnemyShip{
 
         SoundManager.ENEMY_SHOOT_2.play();
     }
+
+    @Override
+    public int getScore() { return 150; }
 }

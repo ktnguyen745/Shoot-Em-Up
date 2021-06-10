@@ -188,4 +188,7 @@ public class BossShip extends EnemyShip{
         velY = -31;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
     }
+
+    @Override
+    public int getScore() { return 2000; }
 }

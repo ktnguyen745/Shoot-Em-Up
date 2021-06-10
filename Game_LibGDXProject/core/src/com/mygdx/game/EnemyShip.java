@@ -73,4 +73,7 @@ public class EnemyShip extends Ship {
 
         SoundManager.ENEMY_SHOOT.play();
     }
+
+    @Override
+    public int getScore() { return 100; }
 }
