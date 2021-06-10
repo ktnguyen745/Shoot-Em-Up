@@ -71,9 +71,6 @@ public class GameScreen implements Screen {
     private float spawnTimer = 0f;
     private int bossesDefeated = 0;
 
-    // Sound
-    SoundManager soundManager;
-
     public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
         this.difficulty = difficulty;
