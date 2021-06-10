@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -54,8 +52,6 @@ public class GameScreen implements Screen {
     private ArrayList<PowerUp> powerUps;
     private LinkedList<Teleport> teleports;
 
-    private int score = 0;
-
     // Heads-Up Display
     BitmapFont font;
     float hudVerticalMargin, hudLeftX, hudRow1Y, hudRow2Y, hudSectionWidth;
@@ -70,6 +66,9 @@ public class GameScreen implements Screen {
     private int enemiesDestroyed;
     private float spawnDelay = 2.5f;
     private float spawnTimer = 0f;
+
+    // Sound
+    SoundManager soundManager;
 
     public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
@@ -119,7 +118,8 @@ public class GameScreen implements Screen {
         // HUD
         prepareHUD();
 
-        SoundManager.PlayBackgroundMusic();
+        soundManager = new SoundManager();
+        soundManager.playBackgroundMusic();
     }
 
     private void prepareHUD() {
@@ -202,7 +202,7 @@ public class GameScreen implements Screen {
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
-                    score += enemyShips.get(i).getScore();
+                    game.score += enemyShips.get(i).getScore();
 
                     if(Math.random() < 0.1){
                         powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
@@ -246,12 +246,12 @@ public class GameScreen implements Screen {
         } else if (state == GameState.LOSE) {
             game.setState(MyGdxGame.gameState.LOSE);
             game.showMenu();
-            SoundManager.PauseBackgroundMusic();
+            soundManager.pauseBackgroundMusic();
             SoundManager.LOSE.play();
         } else if (state == GameState.WIN) {
             game.setState(MyGdxGame.gameState.WIN);
             game.showMenu();
-            SoundManager.PauseBackgroundMusic();
+            soundManager.pauseBackgroundMusic();
             SoundManager.WIN.play();
         }
         if(playerShip.isDestroyed){
@@ -280,7 +280,7 @@ public class GameScreen implements Screen {
 
     private void updateAndRenderHUD() {
         font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%06d", game.score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
     }
 
     private void moveEnemy(EnemyShip enemyShip, float delta) {
@@ -467,11 +467,12 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+        soundManager.dispose();
     }
 
     private void playBossMusic() {
         if (state == GameState.BOSS) {
-            SoundManager.PlayBossMusic();
+            soundManager.playBossMusic();
         }
     }
 }
