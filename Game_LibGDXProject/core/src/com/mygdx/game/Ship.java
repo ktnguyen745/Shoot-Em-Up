@@ -91,4 +91,6 @@ public abstract class Ship {
     public Rectangle getBoundingBox(){
         return boundingBox;
     }
+
+    public int getScore() { return 0; }
 }

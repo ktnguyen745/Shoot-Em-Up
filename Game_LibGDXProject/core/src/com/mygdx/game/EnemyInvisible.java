@@ -33,4 +33,7 @@ public class EnemyInvisible extends EnemyShip{
         }
         bullets.render(batch);
     }
+
+    @Override
+    public int getScore() { return 200; }
 }

@@ -3,9 +3,12 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -14,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Locale;
 
 public class GameScreen implements Screen {
     MyGdxGame game;
@@ -47,6 +51,12 @@ public class GameScreen implements Screen {
     private LinkedList<Explosion> explosionList;
     private ArrayList<PowerUp> powerUps;
     private LinkedList<Teleport> teleports;
+
+    private int score = 0;
+
+    // Heads-Up Display
+    BitmapFont font;
+    float hudVerticalMargin, hudLeftX, hudRow1Y, hudRow2Y, hudSectionWidth;
 
     // Game timer
     int backgroundOffset; // Used to scroll along background
@@ -104,7 +114,32 @@ public class GameScreen implements Screen {
         powerUps = new ArrayList<PowerUp>();
         teleports = new LinkedList<Teleport>();
 
+        // HUD
+        prepareHUD();
+
         SoundManager.PlayBackgroundMusic();
+    }
+
+    private void prepareHUD() {
+        // Create a BitmapFont from our font file
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/EdgeOfTheGalaxyRegular-OVEa6.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = 72;
+        fontParameter.borderWidth = 3.6f;
+        fontParameter.color = new Color(1,1,1,0.3f);
+        fontParameter.borderColor = new Color(0,0,0,0.3f);
+
+        font = fontGenerator.generateFont(fontParameter);
+
+        // scale the font to fit world
+        font.getData().setScale(0.08f);
+
+        // calculate hud margins, etc.
+        hudVerticalMargin = font.getCapHeight() / 2;
+        hudLeftX = hudVerticalMargin;
+        hudRow1Y = WORLD_HEIGHT - hudVerticalMargin;
+        hudRow2Y = hudRow1Y - hudVerticalMargin - font.getCapHeight();
+        hudSectionWidth = (float) WORLD_WIDTH / 2;
     }
 
     public void create(){ }
@@ -165,6 +200,8 @@ public class GameScreen implements Screen {
                     enemiesDestroyed++;
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
+                    score += enemyShips.get(i).getScore();
+
                     if(Math.random() < 0.1){
                         powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
                                 enemyShips.get(i).getBoundingBox().y));
@@ -233,7 +270,15 @@ public class GameScreen implements Screen {
             moveEnemy(enemyShip, delta);
         }
 
+        // hud rendering
+        updateAndRenderHUD();
+
         batch.end();
+    }
+
+    private void updateAndRenderHUD() {
+        font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
     }
 
     private void moveEnemy(EnemyShip enemyShip, float delta) {
