@@ -91,7 +91,7 @@ public class BulletManager {
                 if(ship.intersects(hitbox)){
                     ship.hit();
                     bullets[i] = Type.NONE;
-                    SoundManager.ENEMY_COLLISION.play();
+                    SoundManager.DESTROYED_COLLISION.play();
                 }
             }
         }

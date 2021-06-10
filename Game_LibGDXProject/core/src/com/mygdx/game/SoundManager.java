@@ -9,13 +9,13 @@ public class SoundManager {
     // initiate all sounds
     public static Sound CLICK_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Bleep_03.ogg"));
     public static Sound START_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Complete_02.ogg"));
-    public static Sound ENEMY_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Click_04.ogg"));
+    public static Sound DESTROYED_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/distant_explosion.wav"));
     public static Sound ENEMY_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_01.ogg"));
     public static Sound ENEMY_SHOOT_2 = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_07.ogg"));
     public static Sound ENEMY_SHOOT_3 = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_02.ogg"));
     public static Sound ENEMY_SHOOT_4 = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_02.ogg"));
     public static Sound PLAYER_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Execute_01.ogg"));
-    public static Sound PLAYER_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_01.ogg"));
+    public static Sound HIT_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/explosion.wav"));
     public static Sound QUIT_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_01.ogg"));
     public static Sound BOSS_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_03.ogg"));
     public static Sound WIN = Gdx.audio.newSound(Gdx.files.internal("sound/level_complete.wav"));
@@ -66,15 +66,18 @@ public class SoundManager {
         START_BUTTON.dispose();
         PLAYER_SHOOT.dispose();
         ENEMY_SHOOT.dispose();
-        ENEMY_COLLISION.dispose();
-        PLAYER_COLLISION.dispose();
+        DESTROYED_COLLISION.dispose();
+        HIT_COLLISION.dispose();
         ENEMY_SHOOT_2.dispose();
+        ENEMY_SHOOT_3.dispose();
+        ENEMY_SHOOT_4.dispose();
         BACKGROUND_MUSIC.dispose();
         QUIT_BUTTON.dispose();
         BOSS_SHOOT.dispose();
         WIN.dispose();
         LOSE.dispose();
         BOSS_MUSIC.dispose();
+        BOSS_LAUGH.dispose();
     }
 
 }

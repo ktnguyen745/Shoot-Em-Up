@@ -1,9 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Ship {
@@ -66,8 +64,10 @@ public abstract class Ship {
     public void hit(){
         if (shield > 0){
             shield--;
+            SoundManager.HIT_COLLISION.play();
         } else {
             isDestroyed = true;
+            SoundManager.DESTROYED_COLLISION.play();
         }
     }
 
