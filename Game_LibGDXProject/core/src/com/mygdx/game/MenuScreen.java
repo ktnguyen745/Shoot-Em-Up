@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,11 +30,13 @@ public class MenuScreen implements Screen {
     private Button infiniteMode;
     private Button title;
     private Button levelSelect;
+
     SoundManager soundManager;
 
-    // Heads-up Display
+    // Heads-Up Display
     BitmapFont font;
     float hudVerticalMargin, hudHorizontalMargin, hudCenterX, hudRow1Y, hudRow2Y, hudRow3Y, hudSectionWidth;
+
 
     public MenuScreen(MyGdxGame game){
         this.game = game;
@@ -195,6 +196,7 @@ public class MenuScreen implements Screen {
                 soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.EASY);
                 game.setScreen(game.game);
+                game.score = 0;
             }
             level2Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level2Button.wasDown()){
@@ -202,6 +204,7 @@ public class MenuScreen implements Screen {
                 soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.MEDIUM);
                 game.setScreen(game.game);
+                game.score = 0;
             }
             level3Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level3Button.wasDown()){
@@ -209,6 +212,7 @@ public class MenuScreen implements Screen {
                 soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
+                game.score = 0;
             }
             infiniteMode.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(infiniteMode.wasDown()){
@@ -311,5 +315,4 @@ public class MenuScreen implements Screen {
         }
 
     }
-
 }

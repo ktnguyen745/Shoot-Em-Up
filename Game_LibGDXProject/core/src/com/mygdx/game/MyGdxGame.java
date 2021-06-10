@@ -53,4 +53,5 @@ public class MyGdxGame extends Game {
 	public gameState getState() {
 		return this.state;
 	}
+
 }

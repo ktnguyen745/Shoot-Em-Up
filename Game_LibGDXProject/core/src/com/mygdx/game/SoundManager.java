@@ -36,7 +36,6 @@ public class SoundManager {
         }
     }
 
-
     public void playBossMusic() {
         if (BACKGROUND_MUSIC.isPlaying()) {
             stopBackgroundMusic();
@@ -53,7 +52,6 @@ public class SoundManager {
     public void pauseBackgroundMusic() {
         BACKGROUND_MUSIC.pause();
     }
-
 
     public void stopBackgroundMusic() {
         BACKGROUND_MUSIC.stop();

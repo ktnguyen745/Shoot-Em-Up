@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -72,6 +70,9 @@ public class GameScreen implements Screen {
     private float spawnDelay = 2.5f;
     private float spawnTimer = 0f;
     private int bossesDefeated = 0;
+
+    // Sound
+    SoundManager soundManager;
 
     public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
@@ -274,12 +275,12 @@ public class GameScreen implements Screen {
             game.setState(MyGdxGame.gameState.LOSE);
             game.showMenu();
             soundManager.pauseBackgroundMusic();
-            soundManager.LOSE.play();
+            SoundManager.LOSE.play();
         } else if (state == GameState.WIN) {
             game.setState(MyGdxGame.gameState.WIN);
             game.showMenu();
             soundManager.pauseBackgroundMusic();
-            soundManager.WIN.play();
+            SoundManager.WIN.play();
         }
         if(playerShip.isDestroyed){
             state = GameState.LOSE;
