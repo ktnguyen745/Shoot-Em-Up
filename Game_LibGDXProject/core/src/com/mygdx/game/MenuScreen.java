@@ -2,9 +2,16 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.Align;
+
+import java.util.Locale;
 
 public class MenuScreen implements Screen {
 
@@ -24,8 +31,11 @@ public class MenuScreen implements Screen {
     private Button infiniteMode;
     private Button title;
     private Button levelSelect;
-    private Button winButton;
-    private Button loseButton;
+    SoundManager soundManager;
+
+    // Heads-up Display
+    BitmapFont font;
+    float hudVerticalMargin, hudHorizontalMargin, hudCenterX, hudRow1Y, hudRow2Y, hudRow3Y, hudSectionWidth;
 
     public MenuScreen(MyGdxGame game){
         this.game = game;
@@ -116,12 +126,37 @@ public class MenuScreen implements Screen {
         // Calculate size and position for win and lose screen
         x = screenWidth / 2 - screenWidth / 4;
         y = screenHeight / 2 - screenHeight / 6 ;
-        winButton = new Button(x, y, (float) screenWidth/2, (float) screenHeight/3, winTexture, winTexture);
-        loseButton = new Button(x, y, (float) screenWidth/2, (float) screenHeight/3, loseTexture, loseTexture);
 
+        prepareHUD();
         setMenuState();
-
+        soundManager = new SoundManager();
     }
+
+    private void prepareHUD() {
+        // Create a BitmapFont from our font file
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/EdgeOfTheGalaxyRegular-OVEa6.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParameter.size = 72;
+        fontParameter.borderWidth = 3.6f;
+        fontParameter.color = new Color(255,165,0,0.5f);
+        fontParameter.borderColor = new Color(0,0,0,0.3f);
+
+        font = fontGenerator.generateFont(fontParameter);
+
+        // scale the font to fit world
+        font.getData().setScale(0.8f);
+
+        // calculate hud margins, etc.
+        hudVerticalMargin = Gdx.graphics.getHeight() / 8;
+        hudRow1Y = hudVerticalMargin * 5;
+        hudRow2Y = hudRow1Y - hudVerticalMargin;
+        hudRow3Y = hudRow2Y - hudVerticalMargin + (hudVerticalMargin / 4);
+
+        hudHorizontalMargin = Gdx.graphics.getWidth() / 4;
+        hudCenterX = hudHorizontalMargin;
+        hudSectionWidth = Gdx.graphics.getWidth() / 2;
+    }
+
 
     @Override
     public void show() {
@@ -157,51 +192,50 @@ public class MenuScreen implements Screen {
             level1Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level1Button.wasDown()){
                 SoundManager.START_BUTTON.play();
-                SoundManager.StopBackgroundMusic();
+                soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.EASY);
                 game.setScreen(game.game);
             }
             level2Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level2Button.wasDown()){
                 SoundManager.START_BUTTON.play();
-                SoundManager.StopBackgroundMusic();
+                soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.MEDIUM);
                 game.setScreen(game.game);
             }
             level3Button.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(level3Button.wasDown()){
                 SoundManager.START_BUTTON.play();
-                SoundManager.StopBackgroundMusic();
+                soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.HARD);
                 game.setScreen(game.game);
             }
             infiniteMode.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
             if(infiniteMode.wasDown()){
                 SoundManager.START_BUTTON.play();
-                SoundManager.StopBackgroundMusic();
+                soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.INFINITE);
                 game.setScreen(game.game);
             }
         } else if (state == menuState.WIN) {
-            winButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if(winButton.wasDown()){
+            if(Gdx.input.isTouched()){
                 SoundManager.CLICK_BUTTON.play();
                 state = menuState.MAIN;
             }
         } else if (state == menuState.LOSE) {
-            loseButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
-            if (loseButton.wasDown()) {
+            if (Gdx.input.isTouched()) {
                 SoundManager.CLICK_BUTTON.play();
                 state = menuState.MAIN;
             }
         }
 
         batch.begin();
+        renderHUD();
         if(state == menuState.MAIN){
             playButton.draw(batch);
             quitButton.draw(batch);
             title.draw(batch);
-            SoundManager.PlayBackgroundMusic();
+            soundManager.playBackgroundMusic();
         } else if (state == menuState.LEVEL) {
             backButton.draw(batch);
             level1Button.draw(batch);
@@ -210,11 +244,9 @@ public class MenuScreen implements Screen {
             infiniteMode.draw(batch);
             levelSelect.draw(batch);
         } else if (state == menuState.WIN) {
-            winButton.draw(batch);
-            SoundManager.StopBossMusic();
+            soundManager.stopBossMusic();
         } else if (state == menuState.LOSE) {
-            loseButton.draw(batch);
-            SoundManager.StopBossMusic();
+            soundManager.stopBossMusic();
         }
 
         batch.end();
@@ -248,8 +280,7 @@ public class MenuScreen implements Screen {
         level3Button.dispose();
         level2Button.dispose();
         level1Button.dispose();
-        winButton.dispose();
-        loseButton.dispose();
+        soundManager.dispose();
     }
 
     public void setMenuState() {
@@ -265,4 +296,20 @@ public class MenuScreen implements Screen {
                 break;
         }
     }
+
+    private void renderHUD() {
+        if (this.state == menuState.WIN) {
+            font.draw(batch, "YOU WIN", hudCenterX, hudRow1Y, hudSectionWidth, Align.center, false);
+            font.draw(batch, "Score", hudCenterX, hudRow2Y, hudSectionWidth, Align.center, false);
+            font.draw(batch, String.format(Locale.getDefault(), "%06d", game.score), hudCenterX, hudRow3Y, hudSectionWidth, Align.center, false);
+        } else if (this.state == menuState.LOSE) {
+            font.draw(batch, "TRY AGAIN", hudCenterX, hudRow1Y, hudSectionWidth, Align.center, false);
+            font.draw(batch, "Score", hudCenterX, hudRow2Y, hudSectionWidth, Align.center, false);
+            font.draw(batch, String.format(Locale.getDefault(), "%06d", game.score), hudCenterX, hudRow3Y, hudSectionWidth, Align.center, false);
+        } else {
+            return;
+        }
+
+    }
+
 }

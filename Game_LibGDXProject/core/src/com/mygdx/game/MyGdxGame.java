@@ -16,6 +16,8 @@ public class MyGdxGame extends Game {
 	public enum gameState{MENU, WIN, LOSE}
 	private gameState state;
 
+	public int score = 0;
+
 	// random number generator
 	public static Random random = new Random();
 	
@@ -37,7 +39,7 @@ public class MyGdxGame extends Game {
 	
 	@Override
 	public void dispose () {
-		SoundManager.Dispose();
+
 	}
 
 	public void showMenu(){

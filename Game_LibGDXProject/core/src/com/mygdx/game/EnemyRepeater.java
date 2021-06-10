@@ -24,4 +24,7 @@ public class EnemyRepeater extends EnemyShip{
         SoundManager.ENEMY_SHOOT.play();
         numShots++;
     }
+
+    @Override
+    public int getScore() { return 175; }
 }
