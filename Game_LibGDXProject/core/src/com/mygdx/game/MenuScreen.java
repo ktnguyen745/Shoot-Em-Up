@@ -218,6 +218,7 @@ public class MenuScreen implements Screen {
                 soundManager.stopBackgroundMusic();
                 game.game = new GameScreen(game, GameScreen.Difficulty.INFINITE);
                 game.setScreen(game.game);
+                game.score = 0;
             }
         } else if (state == menuState.WIN) {
             blackButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
