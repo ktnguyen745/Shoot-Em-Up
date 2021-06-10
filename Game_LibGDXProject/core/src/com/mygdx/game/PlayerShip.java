@@ -132,4 +132,10 @@ public class PlayerShip extends Ship {
             x -= 5;
         }
     }
+
+    @Override
+    public void hit() {
+        super.hit();
+        SoundManager.PLAYER_COLLISION.play();
+    }
 }

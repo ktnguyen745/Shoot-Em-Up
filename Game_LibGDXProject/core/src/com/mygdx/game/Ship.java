@@ -64,10 +64,9 @@ public abstract class Ship {
     public void hit(){
         if (shield > 0){
             shield--;
-            SoundManager.HIT_COLLISION.play();
         } else {
             isDestroyed = true;
-            SoundManager.DESTROYED_COLLISION.play();
+            SoundManager.HIT_COLLISION.play();
         }
     }
 
