@@ -8,8 +8,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,8 +28,9 @@ import java.util.Locale;
 public class GameScreen implements Screen {
     MyGdxGame game;
 
-    public enum GameState{ENEMY, BOSS, WIN, LOSE}
+    public enum GameState{ENEMY, BOSS, WIN, LOSE, PAUSE}
     private GameState state;
+    private GameState previousState;
 
     // Game difficulty
     public enum Difficulty{EASY, MEDIUM, HARD, INFINITE}
@@ -46,6 +53,11 @@ public class GameScreen implements Screen {
     private Texture background;
     private Texture explosionTexture = new Texture("exp2.png");
     private Texture teleportTexture = new Texture("teleport.png");
+    private Stage stage;
+    private ImageButton pauseBtn;
+    private ImageButton resumeBtn;
+    private Texture pausedTexture;
+
 
     // Object (ships and bullets)
     private PlayerShip playerShip;
@@ -105,6 +117,46 @@ public class GameScreen implements Screen {
         // Setup textures and batch
         this.background = new Texture(Gdx.files.internal("background.png"));
         this.batch = new SpriteBatch();
+        this.pausedTexture = new Texture("paused.png");
+
+        // Pause
+        this.pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(
+                new Texture("pause.png"))));
+
+        this.pauseBtn.setHeight(100);
+        this.pauseBtn.setWidth(100);
+        this.pauseBtn.setX(WORLD_WIDTH * 13);
+        this.pauseBtn.setY(WORLD_HEIGHT * 15);
+
+        this.resumeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(
+                new Texture("resume.png"))));
+
+        this.resumeBtn.setX(WORLD_WIDTH * 5);
+        this.resumeBtn.setY(WORLD_HEIGHT * 7);
+
+        this.stage = new Stage();
+        this.stage.addActor(pauseBtn);
+
+        Gdx.input.setInputProcessor(stage);
+
+        this.pauseBtn.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                if(state == GameState.PAUSE){
+                    state = previousState;
+                }else{
+                    previousState = state;
+                    state = GameState.PAUSE;
+                }
+            }
+        });
+
+        this.resumeBtn.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                state = previousState;
+                stage.addActor(pauseBtn);
+                resumeBtn.remove();
+            }
+        });
 
         // Start background offset at the bottom of the background image
         this.backgroundOffset = 0;
@@ -152,157 +204,166 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        batch.begin();
+        if(state == GameState.PAUSE){
+            pauseBtn.remove();
+            stage.addActor(resumeBtn);
+            stage.draw();
 
-        // Generate background
-        renderBackground(delta);
+            batch.begin();
+            batch.draw(pausedTexture, WORLD_WIDTH/2 - 20,WORLD_HEIGHT/2, 40,15);
+        } else {
+            batch.begin();
 
-        // Update powerups
-        for(PowerUp p : powerUps){
-            p.update(delta);
-        }
+            // Generate background
+            renderBackground(delta);
 
-        // Update ships
-        playerShip.update(delta);
-        for(Ship enemy : enemyShips){
-            enemy.update(delta);
-        }
-
-        // Check for collisions
-        for(Ship enemy : enemyShips){
-            if(enemy.isDestroyed == false) playerShip.collisionCheck(enemy);
-            enemy.collisionCheck(playerShip);
-        }
-
-        // Check for powerup collision
-        for(int i = 0; i < powerUps.size(); i++){
-            if(playerShip.intersects(powerUps.get(i).boundingBox())){
-                playerShip.setPowerUp(powerUps.get(i).type);
-                soundManager.CLICK_BUTTON.play();
-                powerUps.remove(i);
+            // Update powerups
+            for (PowerUp p : powerUps) {
+                p.update(delta);
             }
-        }
 
-        // Render ships & powerups
-        playerShip.draw(batch);
-        for(Ship enemy : enemyShips){
-            enemy.draw(batch);
-        }
+            // Update ships
+            playerShip.update(delta);
+            for (Ship enemy : enemyShips) {
+                enemy.update(delta);
+            }
 
-        // Render powerups
-        for(PowerUp p : powerUps){
-            p.draw(batch);
-        }
+            // Check for collisions
+            for (Ship enemy : enemyShips) {
+                if (enemy.isDestroyed == false) playerShip.collisionCheck(enemy);
+                enemy.collisionCheck(playerShip);
+            }
 
-        // Remove destroyed ships, handle enemy spawning
-        if(state == GameState.ENEMY){
-            for(int i = 0; i < enemyShips.size(); i++){
-                // If an enemy ship is destroyed create an explosion object
-                if(enemyShips.get(i).isDestroyed && enemyShips.get(i).wasDestroyed == false){
-                    explosionList.add(
-                            new Explosion(explosionTexture, enemyShips.get(i).boundingBox,
-                                    0.5f));
+            // Check for powerup collision
+            for (int i = 0; i < powerUps.size(); i++) {
+                if (playerShip.intersects(powerUps.get(i).boundingBox())) {
+                    playerShip.setPowerUp(powerUps.get(i).type);
+                    soundManager.CLICK_BUTTON.play();
+                    powerUps.remove(i);
+                }
+            }
 
-                    enemiesDestroyed++;
-                    enemyShips.get(i).wasDestroyed = true;
-                    currentEnemies--;
-                    game.score += enemyShips.get(i).getScore();
+            // Render ships & powerups
+            playerShip.draw(batch);
+            for (Ship enemy : enemyShips) {
+                enemy.draw(batch);
+            }
 
-                    if(Math.random() < 0.1){
-                        powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
-                                enemyShips.get(i).getBoundingBox().y));
+            // Render powerups
+            for (PowerUp p : powerUps) {
+                p.draw(batch);
+            }
+
+            // Remove destroyed ships, handle enemy spawning
+            if (state == GameState.ENEMY) {
+                for (int i = 0; i < enemyShips.size(); i++) {
+                    // If an enemy ship is destroyed create an explosion object
+                    if (enemyShips.get(i).isDestroyed && enemyShips.get(i).wasDestroyed == false) {
+                        explosionList.add(
+                                new Explosion(explosionTexture, enemyShips.get(i).boundingBox,
+                                        0.5f));
+
+                        enemiesDestroyed++;
+                        enemyShips.get(i).wasDestroyed = true;
+                        currentEnemies--;
+                        game.score += enemyShips.get(i).getScore();
+
+                        if (Math.random() < 0.1) {
+                            powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
+                                    enemyShips.get(i).getBoundingBox().y));
+                        }
+                    }
+                    if (enemyShips.get(i).deletable) {
+                        enemyShips.remove(i);
                     }
                 }
-                if(enemyShips.get(i).deletable){
-                    enemyShips.remove(i);
-                }
-            }
-            if(difficulty != Difficulty.INFINITE && enemiesDestroyed >= totalEnemies) {
-                state = GameState.BOSS;
-                enemyShips.clear();
-            } else if (difficulty == Difficulty.INFINITE && enemiesDestroyed % 20 == 0 && enemiesDestroyed != 0){
-                state = GameState.BOSS;
-                enemyShips.clear();
-            } else if(currentEnemies == 0){
-                for(int i = 0; i < maxEnemiesOnScreen; i++){
-                    if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
-                        spawnEnemy();
-                        currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && ((currentEnemies + enemiesDestroyed) % 20 != 0
-                            || enemiesDestroyed == 0)){
-                        spawnEnemy();
-                        currentEnemies++;
+                if (difficulty != Difficulty.INFINITE && enemiesDestroyed >= totalEnemies) {
+                    state = GameState.BOSS;
+                    enemyShips.clear();
+                } else if (difficulty == Difficulty.INFINITE && enemiesDestroyed % 20 == 0 && enemiesDestroyed != 0) {
+                    state = GameState.BOSS;
+                    enemyShips.clear();
+                } else if (currentEnemies == 0) {
+                    for (int i = 0; i < maxEnemiesOnScreen; i++) {
+                        if (difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies) {
+                            spawnEnemy();
+                            currentEnemies++;
+                        } else if (difficulty == Difficulty.INFINITE && ((currentEnemies + enemiesDestroyed) % 20 != 0
+                                || enemiesDestroyed == 0)) {
+                            spawnEnemy();
+                            currentEnemies++;
+                        }
+                    }
+                } else if (currentEnemies < maxEnemiesOnScreen) {
+                    spawnTimer += delta;
+                    if (spawnTimer >= spawnDelay) {
+                        if (difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies) {
+                            spawnEnemy();
+                            currentEnemies++;
+                        } else if (difficulty == Difficulty.INFINITE && (currentEnemies + enemiesDestroyed) % 20 != 0) {
+                            spawnEnemy();
+                            currentEnemies++;
+                        }
+                        spawnTimer = 0;
                     }
                 }
-            } else if (currentEnemies < maxEnemiesOnScreen){
-                spawnTimer += delta;
-                if(spawnTimer >= spawnDelay){
-                    if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
-                        spawnEnemy();
-                        currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && (currentEnemies + enemiesDestroyed) % 20 != 0){
-                        spawnEnemy();
-                        currentEnemies++;
-                    }
-                    spawnTimer = 0;
+            } else if (state == GameState.BOSS) {
+                playBossMusic();
+                if (enemyShips.isEmpty()) {
+                    enemyShips.add(shipBuilder.buildBoss());
+                    currentEnemies++;
                 }
-            }
-        } else if (state == GameState.BOSS){
-            playBossMusic();
-            if(enemyShips.isEmpty()){
-                enemyShips.add(shipBuilder.buildBoss());
-                currentEnemies++;
-            }
-            if(difficulty != Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
-                state = GameState.WIN;
-                enemyShips.clear();
-            }
-            if(difficulty == Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
-                enemiesDestroyed++;
-                bossesDefeated++;
-                if(bossesDefeated == 5){
+                if (difficulty != Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true) {
                     state = GameState.WIN;
-                } else {
-                    state = GameState.ENEMY;
-                    soundManager.playBackgroundMusic();
+                    enemyShips.clear();
                 }
+                if (difficulty == Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true) {
+                    enemiesDestroyed++;
+                    bossesDefeated++;
+                    if (bossesDefeated == 5) {
+                        state = GameState.WIN;
+                    } else {
+                        state = GameState.ENEMY;
+                        soundManager.playBackgroundMusic();
+                    }
+                }
+
+            } else if (state == GameState.LOSE) {
+                game.setState(MyGdxGame.gameState.LOSE);
+                game.showMenu();
+                soundManager.pauseBackgroundMusic();
+                SoundManager.LOSE.play();
+            } else if (state == GameState.WIN) {
+                game.setState(MyGdxGame.gameState.WIN);
+                game.showMenu();
+                soundManager.pauseBackgroundMusic();
+                SoundManager.WIN.play();
+            }
+            if (playerShip.isDestroyed) {
+                state = GameState.LOSE;
+            }
+            if (difficulty == Difficulty.INFINITE && enemiesDestroyed == totalEnemies) {
+                state = GameState.WIN;
             }
 
-        } else if (state == GameState.LOSE) {
-            game.setState(MyGdxGame.gameState.LOSE);
-            game.showMenu();
-            soundManager.pauseBackgroundMusic();
-            SoundManager.LOSE.play();
-        } else if (state == GameState.WIN) {
-            game.setState(MyGdxGame.gameState.WIN);
-            game.showMenu();
-            soundManager.pauseBackgroundMusic();
-            SoundManager.WIN.play();
+            updateAndRenderExplosions(delta);
+
+            updateAndRenderTeleports(delta);
+
+            // Check for user input
+            detectInput(delta);
+
+            // Enemy movement
+            ListIterator<EnemyShip> enemyShipListIterator = enemyShips.listIterator();
+            while (enemyShipListIterator.hasNext()) {
+                EnemyShip enemyShip = enemyShipListIterator.next();
+                moveEnemy(enemyShip, delta);
+            }
+
+            // hud rendering
+//            updateAndRenderHUD();
+            stage.draw();
         }
-        if(playerShip.isDestroyed){
-            state = GameState.LOSE;
-        }
-        if(difficulty == Difficulty.INFINITE && enemiesDestroyed == totalEnemies){
-            state = GameState.WIN;
-        }
-
-        updateAndRenderExplosions(delta);
-
-        updateAndRenderTeleports(delta);
-
-        // Check for user input
-        detectInput(delta);
-
-        // Enemy movement
-        ListIterator<EnemyShip> enemyShipListIterator = enemyShips.listIterator();
-        while (enemyShipListIterator.hasNext()) {
-            EnemyShip enemyShip = enemyShipListIterator.next();
-            moveEnemy(enemyShip, delta);
-        }
-
-        // hud rendering
-        updateAndRenderHUD();
-
         batch.end();
     }
 
