@@ -54,8 +54,8 @@ public class GameScreen implements Screen {
     private Texture explosionTexture = new Texture("exp2.png");
     private Texture teleportTexture = new Texture("teleport.png");
     private Stage stage;
-    private ImageButton pauseBtn;
-    private ImageButton resumeBtn;
+    private Button pauseBtn;
+    private Button resumeBtn;
     private Texture pausedTexture;
 
 
@@ -120,43 +120,11 @@ public class GameScreen implements Screen {
         this.pausedTexture = new Texture("paused.png");
 
         // Pause
-        this.pauseBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(
-                new Texture("pause.png"))));
+        this.pauseBtn = new Button(WORLD_WIDTH - 12, WORLD_HEIGHT - 12,
+                10, 10, new Texture("pause.png"), new Texture("pause.png"));
 
-        this.pauseBtn.setHeight(100);
-        this.pauseBtn.setWidth(100);
-        this.pauseBtn.setX(WORLD_WIDTH * 13);
-        this.pauseBtn.setY(WORLD_HEIGHT * 15);
-
-        this.resumeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(
-                new Texture("resume.png"))));
-
-        this.resumeBtn.setX(WORLD_WIDTH * 5);
-        this.resumeBtn.setY(WORLD_HEIGHT * 7);
-
-        this.stage = new Stage();
-        this.stage.addActor(pauseBtn);
-
-        Gdx.input.setInputProcessor(stage);
-
-        this.pauseBtn.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
-                if(state == GameState.PAUSE){
-                    state = previousState;
-                }else{
-                    previousState = state;
-                    state = GameState.PAUSE;
-                }
-            }
-        });
-
-        this.resumeBtn.addListener(new ChangeListener() {
-            public void changed (ChangeEvent event, Actor actor) {
-                state = previousState;
-                stage.addActor(pauseBtn);
-                resumeBtn.remove();
-            }
-        });
+        this.resumeBtn = new Button((WORLD_WIDTH / 2) - 21, WORLD_HEIGHT / 4,
+                42, 15, new Texture("resume.png"), new Texture("resume.png"));
 
         // Start background offset at the bottom of the background image
         this.backgroundOffset = 0;
@@ -205,11 +173,15 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         if(state == GameState.PAUSE){
-            pauseBtn.remove();
-            stage.addActor(resumeBtn);
-            stage.draw();
+
+            resumeBtn.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if(resumeBtn.wasDown() == true){
+                state = previousState;
+                SoundManager.CLICK_BUTTON.play();
+            }
 
             batch.begin();
+            resumeBtn.draw(batch);
             batch.draw(pausedTexture, WORLD_WIDTH/2 - 20,WORLD_HEIGHT/2, 40,15);
         } else {
             batch.begin();
@@ -346,6 +318,18 @@ public class GameScreen implements Screen {
                 state = GameState.WIN;
             }
 
+
+            // Pause button
+            Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            touch = viewport.unproject(touch);
+            pauseBtn.update(Gdx.input.isTouched(), (int) touch.x, (int) touch.y);
+            if(pauseBtn.isDown() == true){
+                previousState = state;
+                state = GameState.PAUSE;
+                SoundManager.CLICK_BUTTON.play();
+            }
+            pauseBtn.draw(batch);
+
             updateAndRenderExplosions(delta);
 
             updateAndRenderTeleports(delta);
@@ -361,8 +345,8 @@ public class GameScreen implements Screen {
             }
 
             // hud rendering
-//            updateAndRenderHUD();
-            stage.draw();
+//            stage.draw();
+            updateAndRenderHUD();
         }
         batch.end();
     }

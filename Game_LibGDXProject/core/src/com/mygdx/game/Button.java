@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Button {
 
-    private float x;
-    private float y;
+    public float x;
+    public float y;
     private float width;
     private float height;
 
@@ -75,5 +75,9 @@ public class Button {
     public void dispose() {
         this.textureDown.dispose();
         this.textureUp.dispose();
+    }
+
+    public void setDown(){
+        this.down = true;
     }
 }
