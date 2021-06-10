@@ -48,7 +48,9 @@ public class GameScreen implements Screen {
     private Texture teleportTexture = new Texture("teleport.png");
     private Stage stage;
     private ImageButton pauseBtn;
+    private ImageButton resumeBtn;
     private Texture pausedTexture;
+
 
     // Object (ships and bullets)
     private PlayerShip playerShip;
@@ -111,6 +113,12 @@ public class GameScreen implements Screen {
         this.pauseBtn.setX(WORLD_WIDTH * 13);
         this.pauseBtn.setY(WORLD_HEIGHT * 15);
 
+        this.resumeBtn = new ImageButton(new TextureRegionDrawable(new TextureRegion(
+                new Texture("resume.png"))));
+
+        this.resumeBtn.setX(WORLD_WIDTH * 5);
+        this.resumeBtn.setY(WORLD_HEIGHT * 7);
+
         this.stage = new Stage();
         this.stage.addActor(pauseBtn);
 
@@ -124,6 +132,14 @@ public class GameScreen implements Screen {
                     previousState = state;
                     state = GameState.PAUSE;
                 }
+            }
+        });
+
+        this.resumeBtn.addListener(new ChangeListener() {
+            public void changed (ChangeEvent event, Actor actor) {
+                state = previousState;
+                stage.addActor(pauseBtn);
+                resumeBtn.remove();
             }
         });
 
@@ -147,11 +163,16 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        batch.begin();
-
         if(state == GameState.PAUSE){
+            pauseBtn.remove();
+            stage.addActor(resumeBtn);
+            stage.draw();
+
+            batch.begin();
             batch.draw(pausedTexture, WORLD_WIDTH/2 - 20,WORLD_HEIGHT/2, 40,15);
         }else{
+            batch.begin();
+
             // Generate background
             renderBackground(delta);
 
