@@ -220,7 +220,7 @@ public class GameScreen implements Screen {
             if(difficulty != Difficulty.INFINITE && enemiesDestroyed >= totalEnemies) {
                 state = GameState.BOSS;
                 enemyShips.clear();
-            } else if (difficulty == Difficulty.INFINITE && enemiesDestroyed % (20 + bossesDefeated) == 0 && enemiesDestroyed != 0){
+            } else if (difficulty == Difficulty.INFINITE && enemiesDestroyed % 20 == 0 && enemiesDestroyed != 0){
                 state = GameState.BOSS;
                 enemyShips.clear();
             } else if(currentEnemies == 0){
@@ -228,7 +228,7 @@ public class GameScreen implements Screen {
                     if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
                         spawnEnemy();
                         currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && ((currentEnemies + enemiesDestroyed) % (20 + bossesDefeated) != 0
+                    } else if(difficulty == Difficulty.INFINITE && ((currentEnemies + enemiesDestroyed) % 20 != 0
                             || enemiesDestroyed == 0)){
                         spawnEnemy();
                         currentEnemies++;
@@ -240,7 +240,7 @@ public class GameScreen implements Screen {
                     if(difficulty != Difficulty.INFINITE && currentEnemies + enemiesDestroyed < totalEnemies){
                         spawnEnemy();
                         currentEnemies++;
-                    } else if(difficulty == Difficulty.INFINITE && (currentEnemies + enemiesDestroyed) % (20 + bossesDefeated) != 0){
+                    } else if(difficulty == Difficulty.INFINITE && (currentEnemies + enemiesDestroyed) % 20 != 0){
                         spawnEnemy();
                         currentEnemies++;
                     }
