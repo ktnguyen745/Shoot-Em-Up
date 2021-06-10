@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PlayerShip extends Ship {
 
-    public enum PowerUpState {NORMAL, DOUBLE_SHOT, SPEED};
+    public enum PowerUpState {NORMAL, DOUBLE_SHOT, SPEED, SHOTGUN};
     private PowerUpState powerUp;
     float powerupDuration = 10f;
     float powerupTime = 0f;
@@ -57,6 +57,8 @@ public class PlayerShip extends Ship {
     public void shoot() {
         if (powerUp == PowerUpState.DOUBLE_SHOT){
             shoot_double();
+        } else if (powerUp == PowerUpState.SHOTGUN){
+            shoot_shotgun();
         } else {
             shoot_normal();
         }
@@ -81,6 +83,26 @@ public class PlayerShip extends Ship {
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
     }
 
+    private void shoot_shotgun(){
+        float posX = (boundingBox.x + boundingBox.width * 0.5f) - 1;
+        float posY = boundingBox.y + 6;
+        float velX = 0;
+        float velY = 40;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = -15;
+        velY = 37;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = 15;
+        velY = 37;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = -25;
+        velY = 31;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+        velX = 25;
+        velY = 31;
+        bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
+    }
+
     public void setPowerUp(PowerUpState powerUp){
         this.powerUp = powerUp;
         powerupTime = 0f;
@@ -91,6 +113,10 @@ public class PlayerShip extends Ship {
         } else if (powerUp == PowerUpState.SPEED){
             shipTexture = new Texture("player_ship_shield.png");
             reloadTime = 0.3f;
+        }
+        else if(powerUp == PowerUpState.SHOTGUN){
+            shipTexture = new Texture("player_ship_shotgun.png");
+            reloadTime = 1f;
         }
     }
 

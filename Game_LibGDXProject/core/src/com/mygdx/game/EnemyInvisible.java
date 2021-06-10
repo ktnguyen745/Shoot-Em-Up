@@ -4,8 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class EnemyInvisible extends EnemyShip{
 
-    private boolean visible = true;
-
     public EnemyInvisible(float movementSpeed, int shield, float width, float height, float xCentre, float yCentre, float reloadTime, String shipTexture, String shieldTexture) {
         super(movementSpeed, shield, width, height, xCentre, yCentre, reloadTime, shipTexture, shieldTexture);
         bullets = new BulletManager("bullet_yellow.png", 5f, 3f, 3f);
@@ -25,13 +23,20 @@ public class EnemyInvisible extends EnemyShip{
 
     @Override
     public void draw(SpriteBatch batch) {
-        if(isDestroyed == false && (reloadTime - lastShotTime > reloadTime - 0.75 || reloadTime - lastShotTime < 0.75)){
+        if(isDestroyed == false && isInvisible() == false){
             batch.draw(shipTexture, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
             if (shield > 0) {
                 batch.draw(shieldTexture, boundingBox.x, boundingBox.y,boundingBox.width,boundingBox.height);
             }
         }
         bullets.render(batch);
+    }
+
+    private boolean isInvisible(){
+        if (reloadTime - lastShotTime > reloadTime * 2/3 || reloadTime - lastShotTime < reloadTime * 1/3){
+            return false;
+        }
+        return true;
     }
 
     @Override

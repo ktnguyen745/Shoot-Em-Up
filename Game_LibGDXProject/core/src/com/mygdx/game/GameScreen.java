@@ -70,6 +70,7 @@ public class GameScreen implements Screen {
     private int enemiesDestroyed;
     private float spawnDelay = 2.5f;
     private float spawnTimer = 0f;
+    private int bossesDefeated = 0;
 
     public GameScreen(MyGdxGame game, Difficulty difficulty){
         this.game = game;
@@ -94,7 +95,7 @@ public class GameScreen implements Screen {
                 maxEnemiesOnScreen = 5;
                 break;
             case INFINITE:
-                totalEnemies = 105;
+                totalEnemies = 110;
                 maxEnemiesOnScreen = 5;
         }
 
@@ -250,17 +251,21 @@ public class GameScreen implements Screen {
             playBossMusic();
             if(enemyShips.isEmpty()){
                 enemyShips.add(shipBuilder.buildBoss());
-                currentEnemies = 1;
+                currentEnemies++;
             }
             if(difficulty != Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
                 state = GameState.WIN;
                 enemyShips.clear();
             }
             if(difficulty == Difficulty.INFINITE && enemyShips.get(0).isDestroyed == true){
-//                enemiesDestroyed++;
-                currentEnemies--;
-                state = GameState.ENEMY;
-                SoundManager.PlayBackgroundMusic();
+                enemiesDestroyed++;
+                bossesDefeated++;
+                if(bossesDefeated == 5){
+                    state = GameState.WIN;
+                } else {
+                    state = GameState.ENEMY;
+                    SoundManager.PlayBackgroundMusic();
+                }
             }
 
         } else if (state == GameState.LOSE) {
@@ -378,10 +383,12 @@ public class GameScreen implements Screen {
 
     private void spawnEnemy() {
         double random = Math.random() * 100;
-        if (random < 60) {
+        if (random < 55) {
             enemyShips.add(shipBuilder.buildEnemy());
-        } else if (60 <= random && random < 75) {
+        } else if (55 <= random && random < 70) {
             enemyShips.add(shipBuilder.buildInvisibleEnemy());
+        } else if (70 <= random && random < 85) {
+            enemyShips.add(shipBuilder.buildRepeater());
         } else {
             enemyShips.add(shipBuilder.buildTripleShot());
         }

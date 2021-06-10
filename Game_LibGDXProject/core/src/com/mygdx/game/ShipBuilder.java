@@ -30,7 +30,7 @@ public class ShipBuilder {
     public EnemyInvisible buildInvisibleEnemy(){
         if(difficulty == GameScreen.Difficulty.INFINITE) update();
         EnemyInvisible invisible = new EnemyInvisible(20 * (movespeedMultiplier * infiniteMultiplier),
-                (int) Math.floor(4 * infiniteMultiplier), 15, 10,
+                (int) Math.floor(3 * infiniteMultiplier), 15, 10,
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
                 2.5f / infiniteMultiplier, "enemy_invisible.png", "shield2.png");
         return invisible;
@@ -43,6 +43,15 @@ public class ShipBuilder {
                 (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
                 2.25f / infiniteMultiplier, "enemy_b.png", "shield2.png");
         return enemyTripleshot;
+    }
+
+    public EnemyRepeater buildRepeater(){
+        if(difficulty == GameScreen.Difficulty.INFINITE) update();
+        EnemyRepeater repeater = new EnemyRepeater(32 * (movespeedMultiplier * infiniteMultiplier),
+                (int) Math.floor(3 * infiniteMultiplier), 12, 12,
+                (float) Math.random() * 62 + 5, (float) Math.random() * 64 + 66,
+                2.5f / infiniteMultiplier, "enemy_c.png", "shield2.png");
+        return repeater;
     }
 
     public BossShip buildBoss(){
