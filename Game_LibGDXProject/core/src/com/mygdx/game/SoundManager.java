@@ -25,9 +25,9 @@ public class SoundManager {
     // boss music
     private static Music BOSS_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Laser Age level 3 theme.mp3"));
 
-    public static void PlayBackgroundMusic() {
+    public void playBackgroundMusic() {
         if (BOSS_MUSIC.isPlaying()) {
-            StopBossMusic();
+            stopBossMusic();
         }
         if (!BACKGROUND_MUSIC.isPlaying()) {
             BACKGROUND_MUSIC.isLooping();
@@ -36,9 +36,9 @@ public class SoundManager {
         }
     }
 
-    public static void PlayBossMusic() {
+    public void playBossMusic() {
         if (BACKGROUND_MUSIC.isPlaying()) {
-            StopBackgroundMusic();
+            stopBackgroundMusic();
         }
         BOSS_MUSIC.isLooping();
         BOSS_MUSIC.setVolume(1.0f);
@@ -47,19 +47,19 @@ public class SoundManager {
         }
     }
 
-    public static void StopBossMusic() {BOSS_MUSIC.stop();}
+    public void stopBossMusic() {BOSS_MUSIC.stop();}
 
-    public static void PauseBackgroundMusic() {
+    public void pauseBackgroundMusic() {
         BACKGROUND_MUSIC.pause();
     }
 
-    public static void StopBackgroundMusic() {
+    public void stopBackgroundMusic() {
         BACKGROUND_MUSIC.stop();
     }
 
 
     // dispose all sounds
-    public static void Dispose() {
+    public void dispose() {
         CLICK_BUTTON.dispose();
         START_BUTTON.dispose();
         PLAYER_SHOOT.dispose();
