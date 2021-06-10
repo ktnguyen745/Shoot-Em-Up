@@ -12,12 +12,15 @@ public class SoundManager {
     public static Sound ENEMY_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Click_04.ogg"));
     public static Sound ENEMY_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_01.ogg"));
     public static Sound ENEMY_SHOOT_2 = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_07.ogg"));
+    public static Sound ENEMY_SHOOT_3 = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_02.ogg"));
+    public static Sound ENEMY_SHOOT_4 = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_02.ogg"));
     public static Sound PLAYER_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Execute_01.ogg"));
     public static Sound PLAYER_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_01.ogg"));
     public static Sound QUIT_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_01.ogg"));
     public static Sound BOSS_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_03.ogg"));
     public static Sound WIN = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_04.ogg"));
     public static Sound LOSE = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_02.ogg"));
+    public static Sound BOSS_LAUGH = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_05.ogg"));
 
     // background music
     private static Music BACKGROUND_MUSIC = Gdx.audio.newMusic(Gdx.files.internal("sound/Laser Age level 1 theme.mp3"));
@@ -31,7 +34,7 @@ public class SoundManager {
         }
         if (!BACKGROUND_MUSIC.isPlaying()) {
             BACKGROUND_MUSIC.isLooping();
-            BACKGROUND_MUSIC.setVolume(0.3f);
+            BACKGROUND_MUSIC.setVolume(0.2f);
             BACKGROUND_MUSIC.play();
         }
     }
@@ -41,7 +44,7 @@ public class SoundManager {
             stopBackgroundMusic();
         }
         BOSS_MUSIC.isLooping();
-        BOSS_MUSIC.setVolume(1.0f);
+        BOSS_MUSIC.setVolume(0.8f);
         if (!BOSS_MUSIC.isPlaying()) {
             BOSS_MUSIC.play();
         }

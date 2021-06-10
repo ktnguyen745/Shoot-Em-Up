@@ -61,6 +61,7 @@ public class BossShip extends EnemyShip{
             lastShot = 4;
         } else {
             shootPatternE();
+            SoundManager.BOSS_LAUGH.play();
             lastShot = 5;
         }
 

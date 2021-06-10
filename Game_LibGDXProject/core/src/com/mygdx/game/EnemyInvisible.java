@@ -18,7 +18,7 @@ public class EnemyInvisible extends EnemyShip{
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
         posX = (boundingBox.x + boundingBox.width * 0.5f) + 2;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
-        SoundManager.ENEMY_SHOOT.play();
+        SoundManager.ENEMY_SHOOT_4.play();
     }
 
     @Override

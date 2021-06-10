@@ -207,6 +207,7 @@ public class GameScreen implements Screen {
                     enemyShips.get(i).wasDestroyed = true;
                     currentEnemies--;
                     game.score += enemyShips.get(i).getScore();
+                    SoundManager.ENEMY_COLLISION.play();
 
                     if(Math.random() < 0.1){
                         powerUps.add(PowerupBuilder.buildRandomPowerup(enemyShips.get(i).getBoundingBox().x,
@@ -475,7 +476,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-
+        soundManager.playBackgroundMusic();
     }
 
     @Override

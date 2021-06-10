@@ -21,7 +21,7 @@ public class EnemyRepeater extends EnemyShip{
         float velX = 0;
         float velY = -50;
         bullets.spawnBullet(BulletManager.Type.BULLET, posX, posY, velX, velY);
-        SoundManager.ENEMY_SHOOT.play();
+        SoundManager.ENEMY_SHOOT_3.play();
         numShots++;
     }
 

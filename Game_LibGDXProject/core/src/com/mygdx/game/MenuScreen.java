@@ -30,6 +30,7 @@ public class MenuScreen implements Screen {
     private Button infiniteMode;
     private Button title;
     private Button levelSelect;
+    private Button blackButton;
 
     SoundManager soundManager;
 
@@ -120,17 +121,14 @@ public class MenuScreen implements Screen {
         levelSelect = new Button(x, y, buttonWidth, buttonHeight, levelSelectTexture, levelSelectTexture);
 
 
-        // Get textures for win and lose screen
-        Texture winTexture = new Texture(Gdx.files.internal("youWin.jpg"));
-        Texture loseTexture = new Texture(Gdx.files.internal("tryAgain.jpg"));
-
-        // Calculate size and position for win and lose screen
-        x = screenWidth / 2 - screenWidth / 4;
-        y = screenHeight / 2 - screenHeight / 6 ;
+        // Set a black button for win and lose screen
+        Texture blackTexture = new Texture(Gdx.files.internal("black.png"));
+        blackButton = new Button(screenWidth / 8, screenHeight / 4, screenWidth - (screenWidth / 4), screenHeight - (screenHeight / 4), blackTexture, blackTexture);
 
         prepareHUD();
         setMenuState();
         soundManager = new SoundManager();
+        soundManager.playBackgroundMusic();
     }
 
     private void prepareHUD() {
@@ -222,19 +220,21 @@ public class MenuScreen implements Screen {
                 game.setScreen(game.game);
             }
         } else if (state == menuState.WIN) {
-            if(Gdx.input.isTouched()){
+            blackButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if(blackButton.wasDown()){
                 SoundManager.CLICK_BUTTON.play();
                 state = menuState.MAIN;
             }
         } else if (state == menuState.LOSE) {
-            if (Gdx.input.isTouched()) {
+            blackButton.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            if (blackButton.wasDown()) {
                 SoundManager.CLICK_BUTTON.play();
                 state = menuState.MAIN;
             }
         }
 
         batch.begin();
-        renderHUD();
+
         if(state == menuState.MAIN){
             playButton.draw(batch);
             quitButton.draw(batch);
@@ -248,11 +248,14 @@ public class MenuScreen implements Screen {
             infiniteMode.draw(batch);
             levelSelect.draw(batch);
         } else if (state == menuState.WIN) {
+            blackButton.draw(batch);
             soundManager.stopBossMusic();
         } else if (state == menuState.LOSE) {
+            blackButton.draw(batch);
             soundManager.stopBossMusic();
         }
 
+        renderHUD();
         batch.end();
     }
 
