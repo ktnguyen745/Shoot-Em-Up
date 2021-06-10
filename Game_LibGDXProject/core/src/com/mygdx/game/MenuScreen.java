@@ -143,7 +143,7 @@ public class MenuScreen implements Screen {
         font = fontGenerator.generateFont(fontParameter);
 
         // scale the font to fit world
-        font.getData().setScale(0.8f);
+        font.getData().setScale(1.0f);
 
         // calculate hud margins, etc.
         hudVerticalMargin = Gdx.graphics.getHeight() / 8;
@@ -306,7 +306,7 @@ public class MenuScreen implements Screen {
 
     private void renderHUD() {
         if (this.state == menuState.WIN) {
-            font.draw(batch, "YOU WIN", hudCenterX, hudRow1Y, hudSectionWidth, Align.center, false);
+            font.draw(batch, "LEVEL COMPLETE", hudCenterX, hudRow1Y, hudSectionWidth, Align.center, false);
             font.draw(batch, "Score", hudCenterX, hudRow2Y, hudSectionWidth, Align.center, false);
             font.draw(batch, String.format(Locale.getDefault(), "%06d", game.score), hudCenterX, hudRow3Y, hudSectionWidth, Align.center, false);
         } else if (this.state == menuState.LOSE) {

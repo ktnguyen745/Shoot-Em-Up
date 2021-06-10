@@ -18,7 +18,7 @@ public class SoundManager {
     public static Sound PLAYER_COLLISION = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_01.ogg"));
     public static Sound QUIT_BUTTON = Gdx.audio.newSound(Gdx.files.internal("sound/Data_Point_01.ogg"));
     public static Sound BOSS_SHOOT = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_03.ogg"));
-    public static Sound WIN = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_04.ogg"));
+    public static Sound WIN = Gdx.audio.newSound(Gdx.files.internal("sound/level_complete.wav"));
     public static Sound LOSE = Gdx.audio.newSound(Gdx.files.internal("sound/Denied_02.ogg"));
     public static Sound BOSS_LAUGH = Gdx.audio.newSound(Gdx.files.internal("sound/Sequence_05.ogg"));
 
