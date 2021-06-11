@@ -2,6 +2,8 @@
 
 Group assignment for Android Game Development by Chelsea Chiu, Kristy Nguyen and Matthew Bailey
 
+### Android Build Tools SDK 29.0.2 was used, make sure you have it downloaded or the project won't work!
+
 
 
 sound effect source file from
