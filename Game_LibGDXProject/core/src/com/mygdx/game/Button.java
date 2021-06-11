@@ -48,6 +48,18 @@ public class Button {
             }
         }
     }
+    public void update(boolean touched, int touchX, int touchY, int width, int height) {
+        if (this.down == true) this.wasDown = true;
+        this.down = false;
+
+        if (touched == true) {
+            if (touchX >= this.x && touchX <= this.x + this.width &&
+                    touchY >= this.y && touchY <= this.y + this.height) {
+                this.down = true;
+                this.wasDown = false;
+            }
+        }
+    }
 
     /**
      * draw()

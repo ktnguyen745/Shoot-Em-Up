@@ -123,7 +123,7 @@ public class GameScreen implements Screen {
         this.pauseBtn = new Button(WORLD_WIDTH - 12, WORLD_HEIGHT - 12,
                 10, 10, new Texture("pause.png"), new Texture("pause.png"));
 
-        this.resumeBtn = new Button((WORLD_WIDTH / 2) - 21, WORLD_HEIGHT / 4,
+        this.resumeBtn = new Button((WORLD_WIDTH / 2) - 21, WORLD_HEIGHT * 1/3,
                 42, 15, new Texture("resume.png"), new Texture("resume.png"));
 
         // Start background offset at the bottom of the background image
@@ -173,8 +173,10 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         if(state == GameState.PAUSE){
-
-            resumeBtn.update(Gdx.input.isTouched(), Gdx.input.getX(), Gdx.input.getY());
+            Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+            touch = viewport.unproject(touch);
+            resumeBtn.update(Gdx.input.isTouched(), (int) touch.x, (int) touch.y,
+                    WORLD_WIDTH, WORLD_HEIGHT);
             if(resumeBtn.wasDown() == true){
                 state = previousState;
                 SoundManager.CLICK_BUTTON.play();
@@ -322,7 +324,7 @@ public class GameScreen implements Screen {
             // Pause button
             Vector2 touch = new Vector2(Gdx.input.getX(), Gdx.input.getY());
             touch = viewport.unproject(touch);
-            pauseBtn.update(Gdx.input.isTouched(), (int) touch.x, (int) touch.y);
+            pauseBtn.update(Gdx.input.isTouched(), (int) touch.x, (int) touch.y, WORLD_WIDTH, WORLD_HEIGHT);
             if(pauseBtn.isDown() == true){
                 previousState = state;
                 state = GameState.PAUSE;
